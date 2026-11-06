@@ -31,6 +31,7 @@ function M:Enable()
         end)
     end
     F.RememberPoints(self.id, cluster)
+    F.Scale(self.id, cluster, .9)
     F.RegisterMover(self.id, "minimap", cluster, "小地图", { point = "TOPRIGHT", x = -22, y = -25 }, 180, 180)
     for _, name in ipairs({ "MinimapBorder", "MinimapBorderTop", "MinimapBackdrop", "MiniMapTrackingBackground" }) do F.Alpha(self.id, _G[name], 0) end
     F.Alpha(self.id, _G.MinimapZoneTextButton, 0)

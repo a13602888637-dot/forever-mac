@@ -15,7 +15,8 @@ from .platform_transactions import fingerprint
 
 COMBOS = ("EllesmereUI", "ForeverUI")
 OVERLAP = {"EllesmereUIActionBars", "EllesmereUIBags", "EllesmereUIChat", "EllesmereUIMinimap",
-           "EllesmereUIQuestTracker", "EllesmereUIUnitFrames", "EllesmereUIRaidFrames", "EllesmereUIResourceBars"}
+           "EllesmereUIQuestTracker", "EllesmereUIUnitFrames", "EllesmereUIRaidFrames", "EllesmereUIResourceBars",
+           "EllesmereUICooldownManager"}
 
 
 def parse_addon_state(raw: bytes):
@@ -110,7 +111,7 @@ class Profiles:
         except ValueError as exc:
             return {"characters": [], "combinations": [], "snapshots": [], "active": {}, "error": str(exc)}
 
-    def prepare_switch(self, character_id, combo):
+    def prepare_switch(self, character_id, combo, keep_ellesmere_dps=False):
         with self.platform.lock():
             character = self.character_path(character_id)
             raw = character.read_bytes()
@@ -125,6 +126,16 @@ class Profiles:
                 updates["ForeverUI"] = False
             elif combo == "ForeverUI":
                 updates.update({name: False for name in self.members("EllesmereUI") if name in OVERLAP})
+            details_members = []
+            if keep_ellesmere_dps:
+                if "EllesmereUIDamageMeters" not in installed:
+                    raise ValueError("尚未安装 EllesmereUI 伤害统计，不能停用替代统计")
+                updates["EllesmereUIDamageMeters"] = True
+                details = next((g for g in packages(mods, {}) if g["id"] == "details"), None)
+                if "Details" in installed and not details:
+                    raise ValueError("Details 包身份未确认，暂不改动")
+                details_members = sorted(m["directory"] for m in details["modules"]) if details else []
+                updates.update({name: False for name in details_members})
             for name, enabled in updates.items():
                 if not enabled:
                     continue
@@ -141,7 +152,9 @@ class Profiles:
             plan = {"id": op, "character_id": character_id, "combo": combo, "created_at": time.time(), "status": "prepared",
                     "game": str(self.platform.game()), "target": character.relative_to(self.platform.game()).as_posix(),
                     "before": fingerprint(character), "after": fingerprint(output), "updates": updates,
-                    "members": members, "note": "只修改选定角色相关插件启用状态；首次 ForeverUI 请在游戏内 /fui 应用主题。配置备份和恢复是独立操作。"}
+                    "members": members, "keep_ellesmere_dps": keep_ellesmere_dps, "details_members": details_members,
+                    "note": "只修改选定角色相关插件启用状态；首次 ForeverUI 请在游戏内 /fui 应用主题。配置备份和恢复是独立操作。" +
+                            (" 伤害统计保留 EllesmereUI，Details 及附属模块停用，配置文件保留。" if keep_ellesmere_dps else "")}
             write_json(self.root / "profile-plans" / (op + ".json"), plan)
             return plan
 
@@ -162,6 +175,11 @@ class Profiles:
                 raise ValueError("组合模块已变化，请重新生成计划")
             _, _, states, _ = parse_addon_state(target.read_bytes())
             installed = {m["directory"]: m for m in scan_addons(self.platform.game() / "Interface/AddOns")}
+            if plan.get("keep_ellesmere_dps"):
+                details = next((g for g in packages(list(installed.values()), {}) if g["id"] == "details"), None)
+                current_details = sorted(m["directory"] for m in details["modules"]) if details else []
+                if current_details != plan["details_members"]:
+                    raise ValueError("伤害统计模块已变化，请重新生成计划")
             for name, enabled in plan["updates"].items():
                 if not enabled:
                     continue

@@ -49,7 +49,13 @@ def bundle(tmp_path, names, version="2.0", dependency=""):
 
 
 @pytest.fixture
-def platform(tmp_path):
+def platform(tmp_path, monkeypatch):
+    # Isolated filesystem acceptance must not depend on the user playing WoW.
+    # The production process guard is exercised separately below.
+    import backend.platform_io as io_module
+    import backend.addon_platform as platform_module
+    monkeypatch.setattr(io_module, "game_running", lambda: False)
+    monkeypatch.setattr(platform_module, "game_running", lambda: False)
     game = tmp_path / "WoW/_forever_"
     (game / "Interface/AddOns").mkdir(parents=True)
     (game / "WTF/Account").mkdir(parents=True)
@@ -304,6 +310,26 @@ def test_profiles_roundtrip_preserves_independent_configs(platform):
     assert (saved / "Other.lua").read_bytes() == before_other
 
 
+def test_forever_profile_keeps_ellesmere_dps_and_disables_entire_details_package(platform):
+    profiles, character, saved = setup_profiles(platform)
+    addons = platform.game() / "Interface/AddOns"
+    addon(addons, "EllesmereUIDamageMeters", dependencies="EllesmereUI", extra="## Group: EllesmereUI")
+    addon(addons, "Details", extra="## X-Curse-Project-ID: 61284")
+    addon(addons, "Details_TinyThreat", dependencies="Details")
+    (saved / "Details.lua").write_text("settings remain untouched")
+    before = manifest(saved)
+    ident = profiles.characters()[0]["id"]
+    plan = profiles.prepare_switch(ident, "ForeverUI", keep_ellesmere_dps=True)
+    assert plan["updates"]["EllesmereUIDamageMeters"] is True
+    assert plan["updates"]["EllesmereUICooldownManager"] is False
+    assert plan["updates"]["Details"] is False and plan["updates"]["Details_TinyThreat"] is False
+    profiles.apply_switch(plan["id"])
+    _, _, states, _ = parse_addon_state((character / "AddOns.txt").read_bytes())
+    assert states["EllesmereUIDamageMeters"] and not states["Details"] and not states["Details_TinyThreat"]
+    assert states["Other"] is False
+    assert manifest(saved) == before
+
+
 @pytest.mark.parametrize("raw", [b"Unknown=1\n", b"A: true\n", b"A: enabled\nA: disabled\n", b"\xff\xfe", b""])
 def test_unknown_client_state_never_written(platform, raw):
     profiles, character, _ = setup_profiles(platform)
@@ -417,7 +443,8 @@ def test_official_mcp_client_roundtrip_and_cross_process_lock(tmp_path):
                 assert (await call("validate_project", {"project_id": ident}))["passed"]
                 packed = await call("package_project", {"project_id": ident})
                 plan = await call("create_install_plan", {"export_id": packed["id"]})
-                assert plan["can_apply"]
+                assert not plan["static_blockers"] and not plan["missing_dependencies"]
+                assert plan["can_apply"] or plan["game_running"], 'preparation remains valid while the real game is open'
                 bad = await client.call_tool("write_file", {"project_id": ident, "path": "../oops.lua", "content": "oops"})
                 assert bad.isError
                 with operation_lock(tmp_path / "platform/mock"):

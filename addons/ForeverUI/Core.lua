@@ -1,11 +1,11 @@
 -- ForeverUI · Undead Arcane. All code is local; no remote execution or gameplay automation.
 local ADDON = ...
-local F = { version = "0.1.0", modules = {}, order = {}, movers = {}, native = {}, editing = false }
+local F = { version = "0.2.0", modules = {}, order = {}, movers = {}, native = {}, editing = false }
 _G.ForeverUI = F
 F.colors = {
-    background = { 0.055, 0.043, 0.075, 0.95 }, panel = { 0.085, 0.063, 0.115, 0.96 },
-    edge = { 0.31, 0.22, 0.40, 1 }, purple = { 0.67, 0.52, 0.92, 1 },
-    bone = { 0.91, 0.87, 0.80, 1 }, muted = { 0.57, 0.49, 0.64, 1 },
+    background = { 0.035, 0.030, 0.050, 0.95 }, panel = { 0.065, 0.055, 0.090, 0.96 },
+    edge = { 0.19, 0.16, 0.25, 1 }, purple = { 0.67, 0.52, 0.92, 1 },
+    bone = { 0.93, 0.90, 0.84, 1 }, muted = { 0.63, 0.58, 0.69, 1 },
     health = { 0.40, 0.29, 0.56, 1 }, power = { 0.40, 0.53, 0.75, 1 },
     mint = { 0.62, 0.74, 0.69, 1 }, amber = { 0.82, 0.71, 0.48, 1 },
 }
@@ -167,6 +167,38 @@ function F.Crop(owner, texture)
     end
     texture:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 end
+function F.Resize(owner, frame, width, height)
+    local rec = F.Remember(owner, frame)
+    if not rec.size then
+        local w, h = F.Number(frame:GetWidth()), F.Number(frame:GetHeight())
+        assert(w and h and w >= 0 and h >= 0, "原生尺寸不可读，未作改动")
+        rec.size = { w, h }
+    end
+    frame:SetSize(width, height)
+end
+function F.Scale(owner, frame, scale)
+    if not frame or not frame.GetScale or not frame.SetScale then return end
+    local rec = F.Remember(owner, frame)
+    if rec.scale == nil then rec.scale = F.Number(frame:GetScale()) end
+    assert(rec.scale and rec.scale > 0, "原生缩放不可读，未作改动")
+    frame:SetScale(scale)
+end
+function F.StyleText(owner, text, size, color)
+    if not text or not text.GetFont or not text.SetFont then return end
+    local rec = F.Remember(owner, text)
+    if not rec.font then
+        local path, originalSize, flags = text:GetFont()
+        if not F.Public(path) or not F.Number(originalSize) or not F.Public(flags) then return end
+        rec.font = { n = 3, path, originalSize, flags }
+    end
+    if text.GetTextColor and not rec.textColor then
+        local values = pack(text:GetTextColor())
+        for i = 1, values.n do if not F.Public(values[i]) then return end end
+        rec.textColor = values
+    end
+    text:SetFont(rec.font[1], size, rec.font[3])
+    if color and text.SetTextColor then text:SetTextColor(unpack(color)) end
+end
 function F.Reparent(owner, frame, parent)
     if not frame then return end
     local rec = F.Remember(owner, frame)
@@ -200,6 +232,8 @@ function F.RestoreNative(owner)
             if rec.userPlaced ~= nil then restore(frame.SetUserPlaced, rec.userPlaced) end
         end
         if rec.alpha ~= nil then restore(frame.SetAlpha, rec.alpha) end
+        if rec.size then restore(frame.SetSize, unpack(rec.size)) end
+        if rec.scale then restore(frame.SetScale, rec.scale) end
         if rec.color then restore(frame.SetVertexColor, unpack(rec.color, 1, rec.color.n)) end
         if rec.coords then restore(frame.SetTexCoord, unpack(rec.coords, 1, rec.coords.n)) end
         if rec.font then restore(frame.SetFont, unpack(rec.font, 1, rec.font.n)) end
@@ -227,7 +261,7 @@ function F.RegisterMover(owner, key, frame, label, default, width, height)
     if not info then
         info = { owner = owner, frame = frame, label = label, default = default, width = width, height = height }
         F.movers[key] = info
-    else info.frame = frame end
+    else info.frame, info.default, info.width, info.height = frame, default, width, height end
     F.Place(key)
     return info
 end
@@ -282,6 +316,33 @@ function F.ResetLayout()
         for key, info in pairs(F.movers) do if F.modules[info.owner].active then F.Place(key) end end
     end
     F.Message("当前角色布局已重置。")
+end
+function F.ApplyCompactLayout()
+    if not F.db or not F.Guard() then return end
+    local previous = {}
+    for key, value in pairs(F.db.layout or {}) do
+        if type(value) == "table" then
+            previous[key] = { point = value.point, relative = value.relative, x = value.x, y = value.y }
+        end
+    end
+    F.db.layoutBackup = previous
+    F.ResetLayout()
+    F.Message("已应用紧凑布局。输入 /fui layout undo 可找回上一次布局。")
+end
+function F.UndoCompactLayout()
+    if not F.db or not F.Guard() then return end
+    if type(F.db.layoutBackup) ~= "table" then F.Message("没有可恢复的上一套布局。"); return end
+    F.SetEdit(false); F.db.layout, F.db.layoutBackup = F.db.layoutBackup, nil
+    for key, info in pairs(F.movers) do if F.modules[info.owner].active then F.Place(key) end end
+    F.Message("已恢复上一套布局位置。")
+end
+function F.SetCooldownIcons(visible)
+    if not F.db or not F.Guard() then return end
+    F.db.showCooldownIcons = visible and true or false
+    local module = F.modules.actionbars
+    if module and module.active and module.RefreshCooldownIcons then module:RefreshCooldownIcons() end
+    if F.RefreshConfig then F.RefreshConfig() end
+    F.Message(visible and "已显示悬浮技能冷却图标。" or "已隐藏悬浮技能冷却图标；动作条和任务特殊技能保留。")
 end
 function F.RegisterModule(id, title, description, module)
     module.id, module.title, module.description = id, title, description
@@ -362,6 +423,7 @@ function F.Initialize()
     if type(F.db.modules) ~= "table" then F.db.modules = {} end
     for _, id in ipairs(F.order) do if F.db.modules[id] == nil then F.db.modules[id] = true end end
     if F.db.enabled == nil then F.db.enabled = false end
+    if F.db.showCooldownIcons == nil then F.db.showCooldownIcons = false end
 end
 local events = CreateFrame("Frame")
 events:RegisterEvent("ADDON_LOADED"); events:RegisterEvent("PLAYER_LOGIN"); events:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -383,6 +445,10 @@ SlashCmdList.FOREVERUI = function(message)
     elseif command == "reset" then F.ResetLayout()
     elseif command == "off" or command == "restore" then F.RestoreAll()
     elseif command == "on" then F.ApplyProfile()
+    elseif command == "icons on" then F.SetCooldownIcons(true)
+    elseif command == "icons off" then F.SetCooldownIcons(false)
+    elseif command == "layout compact" then F.ApplyCompactLayout()
+    elseif command == "layout undo" then F.UndoCompactLayout()
     elseif command == "bags" then
         if F.modules.bags.active then F.modules.bags:Toggle() else F.Message("请先在 /fui 中启用行囊模块。") end
     elseif F.ShowConfig then F.ShowConfig() end

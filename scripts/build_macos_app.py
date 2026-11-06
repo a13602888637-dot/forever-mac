@@ -40,7 +40,7 @@ def build(output: Path):
     data = dict(CFBundleName="Forever AI Companion", CFBundleDisplayName="Forever AI Companion",
                 CFBundleExecutable="ForeverAI", CFBundlePackageType="APPL", CFBundleInfoDictionaryVersion="6.0",
                 CFBundleIdentifier="local.foreverai.companion.launcher", CFBundleIconFile="ForeverAI.icns",
-                CFBundleVersion="0.2.1", CFBundleShortVersionString="0.2.1", NSHighResolutionCapable=True,
+                CFBundleVersion="0.3.0", CFBundleShortVersionString="0.3.0", NSHighResolutionCapable=True,
                 LSMinimumSystemVersion="12.0", ForeverAIProjectPath=str(ROOT),
                 NSPrincipalClass="NSApplication",
                 NSAppTransportSecurity={"NSAllowsLocalNetworking": True, "NSExceptionDomains": {

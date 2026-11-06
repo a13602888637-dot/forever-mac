@@ -22,7 +22,9 @@ local function mutation(self)
     if self.protected and MOCK.combat then error("protected mutation in combat") end
     MOCK.mutations = MOCK.mutations + 1
 end
-function methods:SetSize(w,h) self.width,self.height=w,h end
+function methods:SetSize(w,h) mutation(self); self.width,self.height=w,h end
+function methods:GetScale() return self.scale or 1 end
+function methods:SetScale(v) mutation(self); self.scale=v end
 function methods:SetWidth(w) self.width=w end
 function methods:SetHeight(h) self.height=h end
 function methods:GetWidth() return self.width or 180 end
@@ -142,10 +144,15 @@ function ToggleAllBags() MOCK.nativeBagsOpened=true end
 local function native(name,kind)
  local f=make(kind or 'Frame',name,UIParent); f:SetPoint('CENTER',UIParent,'CENTER',0,0); return f
 end
-for _,name in ipairs({'PlayerFrame','TargetFrame','TargetFrameToT','PetFrame','PartyFrame','CompactPartyFrame','CompactRaidFrameContainer','MainActionBar','MultiBarBottomLeft','MultiBarBottomRight','MultiBarLeft','MultiBarRight','PetActionBar','StanceBar','Minimap','MinimapCluster','ObjectiveTrackerFrame','ChatFrame1','ChatFrame2'}) do native(name) end
+for _,name in ipairs({'PlayerFrame','TargetFrame','TargetFrameToT','PetFrame','PartyFrame','CompactPartyFrame','CompactRaidFrameContainer','MainActionBar','MultiBarBottomLeft','MultiBarBottomRight','MultiBarLeft','MultiBarRight','PetActionBar','StanceBar','Minimap','MinimapCluster','ObjectiveTrackerFrame','ChatFrame1','ChatFrame2','EssentialCooldownViewer','UtilityCooldownViewer','ExtraActionButton1','ZoneAbilityFrame','MicroMenuContainer','BagsBar'}) do native(name) end
 PlayerCastingBarFrame=native('PlayerCastingBarFrame'); PlayerCastingBarFrame:SetParent(PlayerFrame)
 for i=1,12 do
  local b=native('ActionButton'..i,'Button'); b.icon=b:CreateTexture(nil,'ARTWORK'); b.normal=b:CreateTexture(nil,'ARTWORK'); b.HotKey=b:CreateFontString(nil,'OVERLAY')
+ b.protected=true
+ for _,prefix in ipairs({'MultiBarBottomLeftButton','MultiBarBottomRightButton','MultiBarRightButton','MultiBarLeftButton'}) do
+  local extra=native(prefix..i,'Button'); extra.protected=true
+  extra.icon=extra:CreateTexture(nil,'ARTWORK'); extra.normal=extra:CreateTexture(nil,'ARTWORK')
+ end
 end
 function MOCK.Fire(event,...)
  for _,frame in ipairs(frames) do if frame.events[event] and frame.scripts.OnEvent then frame.scripts.OnEvent(frame,event,...) end end

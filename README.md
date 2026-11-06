@@ -4,7 +4,7 @@
 
 <h1 align="center">Forever for Mac</h1>
 <p align="center"><strong>为 macOS 定制的一站式魔兽插件助手</strong></p>
-<p align="center">插件管理 · 备份回滚 · 界面组合 · 离线开发 · MCP</p>
+<p align="center">插件管理 · 备份回滚 · 亡灵奥术 UI · Codex 问答 · MCP</p>
 <p align="center">A macOS-first, all-in-one addon companion for WoW Forever.</p>
 
 <p align="center">
@@ -18,7 +18,7 @@
 
 **Forever for Mac** 面向国服《魔兽世界：无限》玩家：接管已有插件，检查作者更新，预览每次变更，备份后应用；再把 Codex、Claude Code 或 Cursor 接进本地开发工作台。原有角色助手与图鉴也在同一个应用里。
 
-> 当前为 **v0.2.1 源码预览版**。已在 Intel Mac 验证；Apple Silicon 可编译，尚未完成实机验收。只支持国服《无限》，游戏内加载与战斗保护仍需人工验收。
+> 当前为 **v0.3.0 源码预览版**。已在 Intel Mac 验证；Apple Silicon 可编译，尚未完成实机验收。只支持国服《无限》，游戏内加载与战斗保护仍需人工验收。
 
 ![插件管理首页，使用合成演示数据](docs/images/addon-manager.png)
 
@@ -32,6 +32,7 @@
 | 找回更新前的状态 | 安装历史、失败恢复与回滚，备份保留在 AddOns 外 |
 | 换一套界面 | 按角色选择 EllesmereUI / ForeverUI，分别保留配置，独立备份与恢复 |
 | 让 AI 帮写插件 | 创建或复制到离线工作区，编辑、看差异、检查 Lua、打包、生成安装计划 |
+| 直接问 Codex | 奥术问答复用本机已登录的 Codex，未保存角色快照也能先问插件与界面问题 |
 | 查看角色和资料 | 原角色助手、装备比较、专业与收益、图鉴和待办保留为辅助功能 |
 
 ### Mac 原生窗口，战网负责登录
@@ -54,7 +55,9 @@
 
 EllesmereUI 组合启用已装模块、停用 ForeverUI；ForeverUI 组合只停用功能重叠的 EllesmereUI 模块。正常切换仅调整选定角色的启用状态，不转换布局，不改动其他插件。
 
-配置备份与恢复是独立操作。首次使用 ForeverUI，进游戏运行 `/fui` 应用主题。
+配置备份与恢复是独立操作。ForeverUI 0.2.0 提供紧凑居中动作条、细边框、统一字号、下方对称单位框及更安静的聊天与地图布局。首次使用进入角色运行 `/fui`，点击“应用亡灵奥术”和“紧凑布局”。
+
+动作条外的悬浮技能冷却默认隐藏，可用 `/fui icons on` 显示、`/fui icons off` 隐藏；任务特殊技能按钮保留。新布局保留上一套位置，可用 `/fui layout undo` 找回。界面组合还可选择保留 EllesmereUI DPS 统计，并停用 Details! 及附属模块，配置不会删除。
 
 ![界面组合，使用合成角色](docs/images/interface-profiles.png)
 
@@ -69,6 +72,14 @@ EllesmereUI 组合启用已装模块、停用 ForeverUI；ForeverUI 组合只停
 不需要为开发工作台额外配置模型 API Key。你可以继续使用已有的 Codex、Claude Code 或 Cursor，在工作台复制 MCP 的 `command` / `args` 进行连接。
 
 ![离线插件编辑器，使用合成项目](docs/images/workshop.png)
+
+## 奥术问答接入本机 Codex
+
+本机安装并登录 Codex CLI 后，Mac 应用的“奥术问答”可以直接调用现有登录。没有角色快照时可先问插件、界面和操作步骤；角色装备与进度仍以游戏保存的快照为准。
+
+默认 `FAI_AI_PROVIDER=auto`：优先使用已有 OpenAI API 配置，否则使用已登录的本机 Codex。可选值为 `auto` / `codex` / `openai` / `rules`。本次验证使用 Codex CLI 0.166.0。
+
+Codex 问答使用独立临时目录、只读沙箱与结构化输出，关闭工具、MCP、插件和 hooks，不改写 Codex 全局配置；发送前移除角色名和服务器名。问答会调用模型服务，工作台与规则功能仍可离线使用。
 
 ## 在 Mac 上运行
 

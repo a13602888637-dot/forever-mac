@@ -52,7 +52,7 @@
     return id;
   };
   document.querySelectorAll('[data-profile-plan]').forEach(button => button.addEventListener('click', () => busy(button, async () => {
-    const plan = await request('/api/profiles/plans', {character_id: character(), combo: button.dataset.profilePlan});
+    const plan = await request('/api/profiles/plans', {character_id: character(), combo: button.dataset.profilePlan, keep_ellesmere_dps: Boolean(document.querySelector('#profile-keep-eui-dps')?.checked)});
     const host = document.querySelector('#profile-preview');
     host.hidden = false;
     document.querySelector('#profile-preview-note').textContent = plan.note;

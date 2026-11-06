@@ -10,7 +10,7 @@ function M:Enable()
         F.Surface(self.skin, { .055, .04, .075, .80 }, { .25, .18, .32, .8 })
     end
     F.RememberPoints(self.id, frame)
-    F.RegisterMover(self.id, "tracker", frame, "任务追踪", { point = "TOPRIGHT", x = -35, y = -270 }, 260, 70)
+    F.RegisterMover(self.id, "tracker", frame, "任务追踪", { point = "TOPRIGHT", x = -28, y = -245 }, 260, 70)
     local header = frame.Header and (frame.Header.Text or frame.Header.Label)
     if header and header.SetTextColor then
         local rec = F.Remember(self.id, header)

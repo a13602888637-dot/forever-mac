@@ -113,7 +113,7 @@ class Automation:
                         self.error("market", "公开报价暂时无法同步；保留历史，不生成替代价格。")
                 if cache and not self.state["last_reference_sync"]:
                     self.state["last_reference_sync"] = cache["fetched_at"]
-            if mode == "live" and self.service.settings.api_key and now - self.ai_attempt >= 300:
+            if mode == "live" and self.service.settings.api_key and self.service.advisor.status()["provider"] == "openai" and now - self.ai_attempt >= 300:
                 latest = self.service.latest()
                 if latest:
                     saved = self.service.db.last_advice(latest[0])

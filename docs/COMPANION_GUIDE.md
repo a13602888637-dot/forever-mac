@@ -90,13 +90,17 @@ MCP 提供 16 项工具，包括列出插件/项目、读取源码、创建/复�
 
 没有报价、费率或配方材料时，系统自动重试并保留未知，不要求手工补录，不生成替代数字。Mock 使用合成角色、合成物品与模拟费率，数据和真实模式隔离。
 
-## AI
+## AI 与 Codex 问答
 
-真实模型连接使用 **Responses API + Pydantic Structured Outputs**，默认 `gpt-6-luna`，可通过环境变量改为 `gpt-6.1-sol`。
+默认 `FAI_AI_PROVIDER=auto`：优先使用已有 OpenAI API 配置，否则复用已登录的本机 Codex CLI。也可指定 `codex`、`openai` 或 `rules`。
 
-`OPENAI_API_KEY` 从进程环境或本地 `.env` 加载。仓库只有空值示例，不包含密钥；没有密钥时全部本地功能和自动规则继续工作，问答明确显示离线模式。当前交付未创建密钥，也未执行真实 OpenAI 请求。
+奥术问答可直接使用本机 Codex 登录，不需要另配模型 API Key。未保存角色快照时可以问插件、界面与操作步骤；角色装备和进度只有取得实际快照后才参与分析。
 
-建议和引用区分 `verified`（已读快照或已核对的同版本资料）、`calculated`（确定性计算）、`assumption`（推断、模拟或需要确认的来源）。模型输出引用必须对应实际提供的证据。角色名、服务器名、账号路径、聊天及邮件不会放入模型上下文；请求设置 `store=False`。
+Codex 问答在临时目录运行，使用只读沙箱与结构化输出，关闭工具、MCP、插件及 hooks，不改写 Codex 全局配置。模型仍通过网络服务回答，规则和开发工作台可离线使用。
+
+旧 OpenAI API 路径使用 Responses API 与 Pydantic Structured Outputs，配置 `OPENAI_API_KEY` 后可用。本地无需密钥的 Codex 路径已有真实问答与浏览器联调；直接 OpenAI API 路径保留 SDK 契约测试。
+
+引用区分 `verified`、`calculated`、`assumption`，不以模型猜测填充未知数据。自动生成的模型上下文去除角色名和服务器名，不包含账号路径、聊天和邮件。
 
 ## macOS 手动安装方式
 

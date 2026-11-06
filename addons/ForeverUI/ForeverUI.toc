@@ -2,7 +2,7 @@
 ## Title: ForeverUI
 ## Notes: 亡灵奥术界面：单位框、原生安全动作条皮肤、只读行囊、地图、任务与聊天。
 ## Author: Forever
-## Version: 0.1.0
+## Version: 0.2.0
 ## SavedVariablesPerCharacter: ForeverUICharDB
 Core.lua
 Modules\Units.lua

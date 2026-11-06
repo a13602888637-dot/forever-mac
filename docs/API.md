@@ -91,3 +91,11 @@ JSON 包含：`schema_version`、`addon_version`、`captured_at`（UNIX 秒）�
 | `GET /api/workshop/api?q=…`、`GET /api/workshop/mcp-config` | 版本化 API 缓存 / MCP 启动配置 |
 
 所有应用操作使用同一 `operations.lock` 和持久化事务，原文件在客户端 `.forever-backups`。回滚只恢复该事务改动的管理记录，保留之后接管的无关插件。已修改文件、未知状态格式、损坏备份或不匹配客户端会阻止覆盖。MCP 无“应用安装”工具。
+
+
+## 0.3 问答与伤害统计选择
+
+- `GET /api/ai/status` 返回当前回答引擎的 readiness、provider、label 与说明，不包含认证信息。
+- `POST /api/ai/ask` 保留 `{question}` 输入，Codex 登录可用时通过只读 CLI 返回结构化建议。没有角色快照时允许先问通用插件问题，不创建虚假角色快照。
+- `POST /api/profiles/plans` 可传 `keep_ellesmere_dps: true`。计划启用 EllesmereUIDamageMeters，并停用已核验 Details 包的所有模块，配置文件保留。新增模块或文件变化后仍会阻断陈旧计划。
+- ForeverUI 组合会停用重叠的 EllesmereUICooldownManager；实际游戏内主题仍由 `/fui` 面板启用。

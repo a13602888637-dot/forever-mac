@@ -7,7 +7,7 @@ import uuid
 
 from fastapi import APIRouter, File, Form, UploadFile
 from fastapi.responses import FileResponse
-from pydantic import Field
+from pydantic import Field, StrictBool
 
 from .models import Model
 from .platform_io import MAX_UPLOAD
@@ -28,6 +28,7 @@ class BundleInput(Model):
 class ProfileInput(Model):
     character_id: str = Field(min_length=1, max_length=100)
     combo: str = Field(pattern="^(EllesmereUI|ForeverUI)$")
+    keep_ellesmere_dps: StrictBool = False
 
 
 class RestoreInput(Model):
@@ -144,7 +145,7 @@ def router(platform, profiles, workshop):
 
     @api.post("/api/profiles/plans")
     def switch_plan(body: ProfileInput):
-        return profiles.prepare_switch(body.character_id, body.combo)
+        return profiles.prepare_switch(body.character_id, body.combo, body.keep_ellesmere_dps)
 
     @api.get("/api/profiles/plans/{op}")
     def get_switch(op: str):

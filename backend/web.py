@@ -174,7 +174,7 @@ def create_app(settings: Settings | None = None):
                 with suppress(asyncio.CancelledError):
                     await updater
 
-    app = FastAPI(title="Forever AI Companion", version="0.2.1", docs_url="/api/docs", redoc_url=None, lifespan=lifespan)
+    app = FastAPI(title="Forever AI Companion", version="0.3.0", docs_url="/api/docs", redoc_url=None, lifespan=lifespan)
     app.add_middleware(LocalOnly)
     app.state.service = service
     app.state.automation = automation
@@ -201,10 +201,11 @@ def create_app(settings: Settings | None = None):
     def render(request, name, **extra):
         latest = service.latest()
         snapshot_id, snapshot = latest if latest else (None, None)
+        ai_status = service.advisor.status()
         context = {"request": request, "current": "", "mode": settings.mode, "snapshot": snapshot,
                    "snapshot_id": snapshot_id, "characters": service.db.characters(settings.mode),
                    "active_character": snapshot.character.identity if snapshot else "",
-                   "api_ready": bool(settings.api_key) and settings.mode == "live", "model": settings.model,
+                   "api_ready": ai_status["ready"], "model": ai_status["label"], "ai_status": ai_status,
                    "now": int(time.time()), "automation": automation.status(), **extra}
         return templates.TemplateResponse(request=request, name=name, context=context)
 
@@ -230,6 +231,10 @@ def create_app(settings: Settings | None = None):
                 "api_key_configured": bool(settings.api_key), "bind": "127.0.0.1", "schema_version": 1,
                 "application": "forever-ai-companion", "platform_schema": 1,
                 "project_id": hashlib.sha256(str(ROOT).encode()).hexdigest()[:16]}
+
+    @app.get("/api/ai/status")
+    def ai_status():
+        return service.advisor.status()
 
     @app.get("/api/sources")
     def sources():

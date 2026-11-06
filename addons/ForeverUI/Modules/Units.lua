@@ -111,10 +111,10 @@ function M:Build()
     assert(type(RegisterUnitWatch) == "function" and type(UnregisterUnitWatch) == "function" and type(RegisterStateDriver) == "function" and type(UnregisterStateDriver) == "function", "安全单位框接口不可用")
     assert(F.Resolve("UnitHealth") and F.Resolve("UnitHealthMax") and F.Resolve("UnitPower") and F.Resolve("UnitPowerMax"), "单位数值接口不可用")
     local specs = {
-        { "player", "玩家", 226, 62, { point = "CENTER", x = -280, y = -165 } },
-        { "target", "目标", 226, 62, { point = "CENTER", x = 280, y = -165 } },
-        { "targettarget", "目标的目标", 146, 46, { point = "CENTER", x = 470, y = -174 } },
-        { "pet", "宠物", 146, 46, { point = "CENTER", x = -319, y = -255 } },
+        { "player", "玩家", 238, 58, { point = "BOTTOM", x = -270, y = 232 } },
+        { "target", "目标", 238, 58, { point = "BOTTOM", x = 270, y = 232 } },
+        { "targettarget", "目标的目标", 146, 42, { point = "BOTTOM", x = 470, y = 184 } },
+        { "pet", "宠物", 146, 42, { point = "BOTTOM", x = -320, y = 184 } },
     }
     for _, spec in ipairs(specs) do
         local root = self:MakeRoot(spec[1], spec[3], spec[4], spec[2], spec[5])

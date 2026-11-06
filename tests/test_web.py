@@ -65,7 +65,7 @@ def test_live_import_from_windows_shaped_tree(tmp_path, live_raw):
     folder.mkdir(parents=True)
     (flavor / "Interface").mkdir()
     (folder / "ForeverAI.lua").write_text(savedvariables(live_raw))
-    app = create_app(Settings(mode="live", data_dir=tmp_path / "service", game_path=str(root), auto_sync=False))
+    app = create_app(Settings(mode="live", data_dir=tmp_path / "service", game_path=str(root), auto_sync=False, ai_provider="rules"))
     with TestClient(app, base_url="http://127.0.0.1:18761") as client:
         assert client.get("/api/snapshots/latest").status_code == 400
         sources = client.get("/api/sources")

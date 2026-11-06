@@ -166,13 +166,17 @@ class Companion:
         return result
 
     async def advice(self, question=None):
-        snapshot_id, snapshot = self.require_snapshot()
+        latest = self.latest()
+        if not latest and not question:
+            self.require_snapshot()
+        snapshot_id, snapshot = latest if latest else ("general", None)
         refs = []
         # Only cached, explicitly versioned matches may enter the model context.
-        if question and self.db.reference_status():
+        if question and snapshot and self.db.reference_status():
             refs = self.refs.context_matches(question, snapshot)
         result, engine = await self.advisor.generate(snapshot, snapshot_id, question, refs)
-        self.db.save_advice(snapshot_id, "ask" if question else "plan", engine, result.model_dump(), question)
+        if snapshot:
+            self.db.save_advice(snapshot_id, "ask" if question else "plan", engine, result.model_dump(), question)
         return result.model_dump(), engine
 
     def add_price(self, item_id, copper):
@@ -197,7 +201,7 @@ class Companion:
         saved = self.db.last_advice(ident)
         if saved is None:
             advice = rule_plan(snapshot, ident).model_dump()
-            engine = "mock-rules" if snapshot.data_mode == "mock" else "rules-awaiting-ai" if self.settings.api_key else "rules-no-api-key"
+            engine = "mock-rules" if snapshot.data_mode == "mock" else "rules-awaiting-ai" if self.advisor.status()["ready"] else "rules-no-api-key"
             advice_id = self.db.save_advice(ident, "plan", engine, advice)
         else:
             advice = saved["payload"]

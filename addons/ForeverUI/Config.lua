@@ -6,6 +6,7 @@ local function showStatus()
         if F.modules[id].active then active = active + 1 end
         if F.modules[id].restorePending then pending = true end
     end
+    if F.config.cooldownCheck then F.config.cooldownCheck:SetChecked(F.db.showCooldownIcons) end
     if pending then F.config.status:SetText("部分界面恢复未完成 · 可重试恢复，或 /reload")
     elseif F.db.enabled and active > 0 then F.config.status:SetText("已应用 " .. active .. " 个模块 · 点击模块可独立开关")
     elseif F.db.enabled then F.config.status:SetText("模块暂未就绪 · 原生界面保留")
@@ -24,7 +25,7 @@ function F.ShowConfig()
     if not F.db then return end
     if not F.config then
         local panel = CreateFrame("Frame", "ForeverUIConfig", UIParent)
-        F.config = panel; panel:SetSize(640, 560); panel:SetPoint("CENTER"); panel:SetFrameStrata("DIALOG"); panel:EnableMouse(true); panel:SetMovable(true); panel:RegisterForDrag("LeftButton")
+        F.config = panel; panel:SetSize(640, 608); panel:SetPoint("CENTER"); panel:SetFrameStrata("DIALOG"); panel:EnableMouse(true); panel:SetMovable(true); panel:RegisterForDrag("LeftButton")
         F.Surface(panel, F.colors.background, F.colors.edge)
         panel:SetScript("OnDragStart", function(self) if F.Guard() then self:StartMoving() end end)
         panel:SetScript("OnDragStop", function(self) self:StopMovingOrSizing() end)
@@ -56,10 +57,16 @@ function F.ShowConfig()
         end
         local footnote = F.Font(panel, 10, F.colors.muted); footnote:SetPoint("TOPLEFT", 28, -437); footnote:SetWidth(580)
         footnote:SetText("布局按角色保存。拖动编辑标签调整位置；战斗中暂停所有布局与模块设置。")
+        panel.cooldownCheck = CreateFrame("CheckButton", nil, panel, "UICheckButtonTemplate")
+        panel.cooldownCheck:SetSize(24, 24); panel.cooldownCheck:SetPoint("TOPLEFT", 27, -465)
+        panel.cooldownCheck:SetScript("OnClick", function(self) F.SetCooldownIcons(self:GetChecked()) end)
+        local cooldownLabel = F.Font(panel, 11, F.colors.bone)
+        cooldownLabel:SetPoint("LEFT", panel.cooldownCheck, "RIGHT", 7, 0)
+        cooldownLabel:SetText("显示动作条外的悬浮技能冷却图标")
         local apply = F.Button(panel, "应用亡灵奥术", 148, function() F.ApplyProfile(); showStatus() end); apply:SetPoint("BOTTOMLEFT", 28, 61)
         apply.surface.background:SetColorTexture(.29,.18,.41,1)
         F.Button(panel, "编辑布局", 116, function() panel:Hide(); F.SetEdit(true) end):SetPoint("LEFT", apply, "RIGHT", 10, 0)
-        F.Button(panel, "重置布局", 116, function() F.ResetLayout() end):SetPoint("LEFT", apply, "RIGHT", 136, 0)
+        F.Button(panel, "紧凑布局", 116, function() F.ApplyCompactLayout() end):SetPoint("LEFT", apply, "RIGHT", 136, 0)
         F.Button(panel, "恢复原生", 116, function() F.RestoreAll() end):SetPoint("LEFT", apply, "RIGHT", 262, 0)
         local build = F.Font(panel, 9, F.colors.muted); build:SetPoint("BOTTOMLEFT", 28, 25)
         local version, number, date, interface = F.Read("GetBuildInfo")

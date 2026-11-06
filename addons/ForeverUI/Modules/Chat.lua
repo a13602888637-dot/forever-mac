@@ -34,7 +34,8 @@ function M:Enable()
     assert(_G.ChatFrame1, "未找到原生聊天窗口，保留原样")
     for i = 1, math.min(F.Number(NUM_CHAT_WINDOWS, 10), 20) do if _G["ChatFrame" .. i] then self:Skin(_G["ChatFrame" .. i], i) end end
     F.RememberPoints(self.id, ChatFrame1)
-    F.RegisterMover(self.id, "chat", ChatFrame1, "聊天", { point = "BOTTOMLEFT", x = 28, y = 38 })
+    F.Resize(self.id, ChatFrame1, 340, 176)
+    F.RegisterMover(self.id, "chat", ChatFrame1, "聊天", { point = "BOTTOMLEFT", x = 24, y = 38 }, 340, 176)
     -- No chat filters, message sending, key interception, or history writes.
 end
 function M:Disable() for _, skin in pairs(self.skins) do skin:Hide() end end
