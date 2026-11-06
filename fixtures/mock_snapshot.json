@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "addon_version": "0.1.0",
+  "captured_at": 1792994476,
+  "data_mode": "mock",
+  "client": {
+    "version": "1.60.1",
+    "build": "70450",
+    "interface": 16001
+  },
+  "character": {
+    "name": "奥术旅人（演示）",
+    "realm": "演示服务器",
+    "level": 32,
+    "class_token": "MAGE",
+    "race_token": "Scourge",
+    "specialization": "奥术（演示设定）",
+    "faction": "Horde"
+  },
+  "equipment": [
+    {
+      "item_id": 1900000001,
+      "name": "演示·学徒兜帽",
+      "item_level": 24,
+      "quality": 2,
+      "stats": {
+        "ITEM_MOD_INTELLECT_SHORT": 8,
+        "ITEM_MOD_STAMINA_SHORT": 4
+      },
+      "status": "available",
+      "slot": 1,
+      "equip_location": "INVTYPE_HEAD"
+    },
+    {
+      "item_id": 1900000002,
+      "name": "演示·奥术长袍",
+      "item_level": 24,
+      "quality": 2,
+      "stats": {
+        "ITEM_MOD_INTELLECT_SHORT": 12,
+        "ITEM_MOD_STAMINA_SHORT": 6
+      },
+      "status": "available",
+      "slot": 5,
+      "equip_location": "INVTYPE_CHEST"
+    }
+  ],
+  "bags": [
+    {
+      "item_id": 1900000003,
+      "name": "演示·织法者兜帽",
+      "item_level": 24,
+      "quality": 2,
+      "stats": {
+        "ITEM_MOD_INTELLECT_SHORT": 12,
+        "ITEM_MOD_STAMINA_SHORT": 3
+      },
+      "status": "available",
+      "bag": 0,
+      "bag_slot": 1,
+      "equip_location": "INVTYPE_HEAD"
+    },
+    {
+      "item_id": 1900000101,
+      "name": "演示·丝绸",
+      "item_level": null,
+      "quality": 2,
+      "stats": null,
+      "status": "available",
+      "count": 20,
+      "bag": 0,
+      "bag_slot": 2,
+      "equip_location": null
+    },
+    {
+      "item_id": 1900000102,
+      "name": "演示·线",
+      "item_level": null,
+      "quality": 2,
+      "stats": null,
+      "status": "available",
+      "count": 10,
+      "bag": 0,
+      "bag_slot": 3,
+      "equip_location": null
+    }
+  ],
+  "professions": [
+    {
+      "skill_line_id": 197,
+      "name": "裁缝（演示）",
+      "rank": 150,
+      "max_rank": 300
+    }
+  ],
+  "recipes": [
+    {
+      "recipe_id": 1900000201,
+      "name": "演示·奥术便装",
+      "output_item_id": 1900000202,
+      "output_quantity": 1,
+      "reagents": [
+        {
+          "item_id": 1900000101,
+          "quantity": 3
+        },
+        {
+          "item_id": 1900000102,
+          "quantity": 1
+        }
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "quest_id": 1900000301,
+      "title": "演示·整理法师行囊",
+      "level": 32,
+      "is_complete": false,
+      "objectives": [
+        "检查装备与消耗品（演示任务）"
+      ]
+    }
+  ],
+  "capabilities": {},
+  "talents": null,
+  "unavailable": {
+    "talents": "synthetic_demo_no_talents",
+    "bags.1.stats": "reagent_has_no_demo_stats",
+    "bags.1.item_level": "demo_unknown",
+    "bags.2.stats": "reagent_has_no_demo_stats",
+    "bags.2.item_level": "demo_unknown",
+    "bags.1.equip_location": "demo_reagent_not_equippable",
+    "bags.2.equip_location": "demo_reagent_not_equippable"
+  }
+}

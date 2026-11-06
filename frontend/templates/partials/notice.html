@@ -1,0 +1,1 @@
+<div class="notice {{ 'notice-error' if status == 'error' else '' }}" role="{{ 'alert' if status == 'error' else 'status' }}"><strong>{{ '暂时无法完成' if status == 'error' else '已完成' }}</strong><p>{{ message }}</p></div>

@@ -1,0 +1,7475 @@
+{
+  "source": "https://wuxianwow.com/api/",
+  "reference_build": "1.60.1.70450",
+  "retrieved_at": "2026-10-26T06:26:49.539152+00:00",
+  "status": "documentation_only_not_game_runtime",
+  "functions": {
+    "GetBuildInfo": {
+      "arguments": [],
+      "returns": [
+        [
+          "buildVersion",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "buildNumber",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "buildDate",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "interfaceVersion",
+          "number",
+          0,
+          null
+        ],
+        [
+          "localizedVersion",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "buildInfo",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.CanChangeTalents": {
+      "arguments": [],
+      "returns": [
+        [
+          "canChange",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "canAdd",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "changeError",
+          "string",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.CanCreateNewConfig": {
+      "arguments": [],
+      "returns": [
+        [
+          "canCreate",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.CanEditTalents": {
+      "arguments": [],
+      "returns": [
+        [
+          "canEdit",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "changeError",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetActiveConfigID": {
+      "arguments": [],
+      "returns": [
+        [
+          "activeConfigID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetActiveHeroTalentSpec": {
+      "arguments": [],
+      "returns": [
+        [
+          "heroSpecID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetConfigIDsBySpecID": {
+      "arguments": [
+        [
+          "specID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "configIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetHasStarterBuild": {
+      "arguments": [],
+      "returns": [
+        [
+          "hasStarterBuild",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetHeroTalentSpecsForClassSpec": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          1,
+          null
+        ],
+        [
+          "classSpecID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "subTreeIDs",
+          "table",
+          1,
+          null
+        ],
+        [
+          "requiredPlayerLevel",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_ClassTalents.GetLastSelectedSavedConfigID": {
+      "arguments": [
+        [
+          "specID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "configID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetNextStarterBuildPurchase": {
+      "arguments": [],
+      "returns": [
+        [
+          "nodeID",
+          "number",
+          1,
+          null
+        ],
+        [
+          "entryID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetStarterBuildActive": {
+      "arguments": [],
+      "returns": [
+        [
+          "isActive",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.GetTraitTreeForSpec": {
+      "arguments": [
+        [
+          "specID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "treeID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_ClassTalents.IsConfigPopulated": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isPopulated",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "GetRealmName": {
+      "arguments": [],
+      "returns": [
+        [
+          "realmName",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetBackpackAutosortDisabled": {
+      "arguments": [],
+      "returns": [
+        [
+          "isDisabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetBackpackSellJunkDisabled": {
+      "arguments": [],
+      "returns": [
+        [
+          "isDisabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetBagName": {
+      "arguments": [
+        [
+          "bagIndex",
+          "BagIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "name",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetBagSlotFlag": {
+      "arguments": [
+        [
+          "bagIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "flag",
+          "BagSlotFlags",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isSet",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetBankAutosortDisabled": {
+      "arguments": [],
+      "returns": [
+        [
+          "isDisabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetContainerFreeSlots": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "freeSlots",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetContainerItemCooldown": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "startTime",
+          "number",
+          0,
+          null
+        ],
+        [
+          "duration",
+          "number",
+          0,
+          null
+        ],
+        [
+          "enable",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetContainerItemDurability": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "durability",
+          "number",
+          0,
+          null
+        ],
+        [
+          "maxDurability",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetContainerItemEquipmentSetInfo": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "inSet",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "setList",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetContainerItemID": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "containerID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetContainerItemInfo": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "containerInfo",
+          "ContainerItemInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetContainerItemLink": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemLink",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetContainerItemPurchaseCurrency": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "itemIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "isEquipped",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "currencyInfo",
+          "ItemPurchaseCurrency",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetContainerItemPurchaseInfo": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "isEquipped",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "ItemPurchaseInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetContainerItemPurchaseItem": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "itemIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "isEquipped",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemInfo",
+          "ItemPurchaseItem",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetContainerItemQuestInfo": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questInfo",
+          "ItemQuestInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetContainerNumFreeSlots": {
+      "arguments": [
+        [
+          "bagIndex",
+          "BagIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "numFreeSlots",
+          "number",
+          0,
+          null
+        ],
+        [
+          "bagFamily",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetContainerNumSlots": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "numSlots",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetInsertItemsLeftToRight": {
+      "arguments": [],
+      "returns": [
+        [
+          "isEnabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetItemCooldown": {
+      "arguments": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "startTime",
+          "number",
+          0,
+          null
+        ],
+        [
+          "duration",
+          "number",
+          0,
+          null
+        ],
+        [
+          "enable",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Container.GetMaxArenaCurrency": {
+      "arguments": [],
+      "returns": [
+        [
+          "maxCurrency",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.GetSortBagsRightToLeft": {
+      "arguments": [],
+      "returns": [
+        [
+          "isEnabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.IsBattlePayItem": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ],
+        [
+          "slotIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isBattlePayItem",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Container.IsContainerFiltered": {
+      "arguments": [
+        [
+          "containerIndex",
+          "BagIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isFiltered",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.CanBeRefunded": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canBeRefunded",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.CanItemTransmogAppearance": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canTransmog",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "errorCode",
+          "TransmogOutfitSlotError",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.CanScrapItem": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canBeScrapped",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.CanViewItemPowers": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isItemViewable",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetAppliedItemTransmogInfo": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "ItemTransmogInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetBaseItemTransmogInfo": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "ItemTransmogInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetCurrentItemLevel": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "currentItemLevel",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetCurrentItemTransmogInfo": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "ItemTransmogInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetDelvePreviewItemLink": {
+      "arguments": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "context",
+          "ItemCreationContext",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemLink",
+          "string",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetDelvePreviewItemQuality": {
+      "arguments": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "context",
+          "ItemCreationContext",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemQuality",
+          "ItemQuality",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetDetailedItemLevelInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "actualItemLevel",
+          "number",
+          0,
+          null
+        ],
+        [
+          "previewLevel",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "sparseItemLevel",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetFirstTriggeredSpellForItem": {
+      "arguments": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemQuality",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "spellID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemChildInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ],
+        [
+          "slotID",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemClassInfo": {
+      "arguments": [
+        [
+          "itemClassID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemConversionOutputIcon": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "icon",
+          "fileID",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemCooldown": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "startTimeSeconds",
+          "number",
+          0,
+          null
+        ],
+        [
+          "durationSeconds",
+          "number",
+          0,
+          null
+        ],
+        [
+          "enableCooldownTimer",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemCount": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ],
+        [
+          "includeBank",
+          "bool",
+          0,
+          false
+        ],
+        [
+          "includeUses",
+          "bool",
+          0,
+          false
+        ],
+        [
+          "includeReagentBank",
+          "bool",
+          0,
+          false
+        ],
+        [
+          "includeAccountBank",
+          "bool",
+          0,
+          false
+        ]
+      ],
+      "returns": [
+        [
+          "count",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemCreationContext": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "creationContext",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemFamily": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemGUID": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemGem": {
+      "arguments": [
+        [
+          "hyperlink",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "index",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "gemName",
+          "string",
+          0,
+          null
+        ],
+        [
+          "gemLink",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemGemID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ],
+        [
+          "index",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "gemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemID": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemIDByGUID": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemIDForItemInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemIcon": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "icon",
+          "fileID",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemIconByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "icon",
+          "fileID",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemLink",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemQuality",
+          "ItemQuality",
+          0,
+          null
+        ],
+        [
+          "itemLevel",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemMinLevel",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemType",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemSubType",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemStackCount",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemEquipLoc",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemTexture",
+          "fileID",
+          0,
+          null
+        ],
+        [
+          "sellPrice",
+          "number",
+          0,
+          null
+        ],
+        [
+          "classID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "subclassID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "bindType",
+          "number",
+          0,
+          null
+        ],
+        [
+          "expansionID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "setID",
+          "number",
+          1,
+          null
+        ],
+        [
+          "isCraftingReagent",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "itemDescription",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemInfoInstant": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemType",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemSubType",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemEquipLoc",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "icon",
+          "fileID",
+          0,
+          null
+        ],
+        [
+          "classID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "subClassID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemInventorySlotInfo": {
+      "arguments": [
+        [
+          "inventorySlot",
+          "InventoryType",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemInventorySlotKey": {
+      "arguments": [
+        [
+          "inventorySlot",
+          "InventoryType",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemInventoryType": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "inventoryType",
+          "InventoryType",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemInventoryTypeByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "inventoryType",
+          "InventoryType",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemLearnTransmogSet": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "setID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemLink": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemLink",
+          "string",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemLinkByGUID": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemLink",
+          "string",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemLocation": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemMaxStackSize": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "stackSize",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemMaxStackSizeByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "stackSize",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemName": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemName",
+          "string",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemNameByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemName",
+          "string",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemNumAddedSockets": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "socketCount",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemNumSockets": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "socketCount",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemQuality": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemQuality",
+          "ItemQuality",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemQualityByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemQuality",
+          "ItemQuality",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemQualityColor": {
+      "arguments": [
+        [
+          "quality",
+          "ItemQuality",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "colorRGBR",
+          "number",
+          0,
+          null
+        ],
+        [
+          "colorRGBG",
+          "number",
+          0,
+          null
+        ],
+        [
+          "colorRGBB",
+          "number",
+          0,
+          null
+        ],
+        [
+          "qualityString",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemSetInfo": {
+      "arguments": [
+        [
+          "setID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetItemSpecInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "specTable",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemSpell": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "spellName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "spellID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemStatDelta": {
+      "arguments": [
+        [
+          "itemLink1",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "itemLink2",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "statTable",
+          "LuaValueVariant",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemStats": {
+      "arguments": [
+        [
+          "itemLink",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "statTable",
+          "LuaValueVariant",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemSubClassInfo": {
+      "arguments": [
+        [
+          "itemClassID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemSubClassID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "subClassName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "subClassUsesInvType",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemUniqueness": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "limitCategory",
+          "number",
+          0,
+          null
+        ],
+        [
+          "limitMax",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemUniquenessByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isUnique",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "limitCategoryName",
+          "cstring",
+          1,
+          null
+        ],
+        [
+          "limitCategoryCount",
+          "number",
+          1,
+          null
+        ],
+        [
+          "limitCategoryID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetItemUpgradeInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemUpgradeInfo",
+          "ItemUpgradeInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetLimitedCurrencyItemInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "name",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "icon",
+          "fileID",
+          0,
+          null
+        ],
+        [
+          "quantity",
+          "number",
+          0,
+          null
+        ],
+        [
+          "maxQuantity",
+          "number",
+          0,
+          null
+        ],
+        [
+          "totalEarned",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetSetBonusesForSpecializationByItemID": {
+      "arguments": [
+        [
+          "specID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemSetSpellIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Item.GetStackCount": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "stackCount",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.GetWeaponEnchantInfo": {
+      "arguments": [
+        [
+          "weaponSlot",
+          "WeaponSlot",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "enchants",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsAnimaItemByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isAnimaItem",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsArtifactPowerItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsBound": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isBound",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsBoundToAccountUntilEquip": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isBoundToAccountUntilEquip",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsConsumableItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsCorruptedItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsCosmeticItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsCurioItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsCurrentItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsDecorItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isDecor",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsDressableItemByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isDressableItem",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsEquippableItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsEquippedItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsEquippedItemType": {
+      "arguments": [
+        [
+          "type",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsHarmfulItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsHelpfulItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemBindToAccount": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isItemBindToAccount",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemBindToAccountUntilEquip": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isItemBindToAccountUntilEquip",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemConduit": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isConduit",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemConvertibleAndValidForPlayer": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isItemConvertibleAndValidForPlayer",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemCorrupted": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCorrupted",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemCorruptionRelated": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCorruptionRelated",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemCorruptionResistant": {
+      "arguments": [
+        [
+          "itemLoc",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCorruptionResistant",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemDataCached": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCached",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemDataCachedByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCached",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemGUIDInInventory": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "valid",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemInRange": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ],
+        [
+          "targetToken",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemKeystoneByID": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isKeystone",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsItemSpecificToPlayerClass": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isItemSpecificToPlayerClass",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsLocked": {
+      "arguments": [
+        [
+          "itemLocation",
+          "ItemLocation",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isLocked",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsRelicItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Item.IsUsableItem": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "usable",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "noMana",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.CanAbandonQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canAbandon",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetAbandonQuest": {
+      "arguments": [],
+      "returns": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetAbandonQuestItems": {
+      "arguments": [],
+      "returns": [
+        [
+          "itemIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetActivePreyQuest": {
+      "arguments": [],
+      "returns": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetActiveThreatMaps": {
+      "arguments": [],
+      "returns": [
+        [
+          "uiMapIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetAllCompletedQuestIDs": {
+      "arguments": [],
+      "returns": [
+        [
+          "quests",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetBountiesForMapID": {
+      "arguments": [
+        [
+          "uiMapID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "bounties",
+          "table",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetBountySetInfoForMapID": {
+      "arguments": [
+        [
+          "uiMapID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "displayLocation",
+          "MapOverlayDisplayLocation",
+          0,
+          null
+        ],
+        [
+          "lockQuestID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "bountySetID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "isActivitySet",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetDistanceSqToQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "distanceSq",
+          "number",
+          0,
+          null
+        ],
+        [
+          "onContinent",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetHeaderIndexForQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "index",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetInfo": {
+      "arguments": [
+        [
+          "questLogIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "QuestInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetLogIndexForQuestID": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questLogIndex",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetMapForQuestPOIs": {
+      "arguments": [],
+      "returns": [
+        [
+          "uiMapID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetMaxNumQuests": {
+      "arguments": [],
+      "returns": [
+        [
+          "maxNumQuests",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetMaxNumQuestsCanAccept": {
+      "arguments": [],
+      "returns": [
+        [
+          "maxNumQuestsCanAccept",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetNextWaypoint": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "mapID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "x",
+          "number",
+          0,
+          null
+        ],
+        [
+          "y",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetNextWaypointForMap": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "uiMapID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "x",
+          "number",
+          0,
+          null
+        ],
+        [
+          "y",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetNextWaypointText": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "waypointText",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetNumQuestLogEntries": {
+      "arguments": [],
+      "returns": [
+        [
+          "numShownEntries",
+          "number",
+          0,
+          null
+        ],
+        [
+          "numQuests",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetNumQuestObjectives": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "leaderboardCount",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetNumQuestWatches": {
+      "arguments": [],
+      "returns": [
+        [
+          "numQuestWatches",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetNumWorldQuestWatches": {
+      "arguments": [],
+      "returns": [
+        [
+          "numQuestWatches",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestAdditionalHighlights": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "uiMapID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "worldQuests",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "worldQuestsElite",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "dungeons",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "treasures",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestDetailsTheme": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "theme",
+          "QuestTheme",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestDifficultyLevel": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "level",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestIDForLogIndex": {
+      "arguments": [
+        [
+          "questLogIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestIDForQuestWatchIndex": {
+      "arguments": [
+        [
+          "questWatchIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestIDForWorldQuestWatchIndex": {
+      "arguments": [
+        [
+          "questWatchIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestLogMajorFactionReputationRewards": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "reputationRewards",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetQuestLogPortraitGiver": {
+      "arguments": [
+        [
+          "questLogIndex",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "portraitGiver",
+          "number",
+          0,
+          null
+        ],
+        [
+          "portraitGiverText",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "portraitGiverName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "portraitGiverMount",
+          "number",
+          0,
+          null
+        ],
+        [
+          "portraitGiverModelSceneID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetQuestObjectives": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "objectives",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetQuestRewardCurrencies": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questRewardCurrencies",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestRewardCurrencyInfo": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "currencyIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "isChoice",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questRewardCurrencyInfo",
+          "QuestRewardCurrencyInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestTagInfo": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "QuestTagInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestTimers": {
+      "arguments": [],
+      "returns": [
+        [
+          "questTimers",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestType": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "questType",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestWatchType": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "watchType",
+          "QuestWatchType",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetQuestsOnMap": {
+      "arguments": [
+        [
+          "uiMapID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "quests",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetRequiredMoney": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "requiredMoney",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetSelectedQuest": {
+      "arguments": [],
+      "returns": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetSuggestedGroupSize": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "suggestedGroupSize",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetTimeAllowed": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "totalTime",
+          "number",
+          0,
+          null
+        ],
+        [
+          "elapsedTime",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.GetTitleForLogIndex": {
+      "arguments": [
+        [
+          "questLogIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "title",
+          "cstring",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetTitleForQuestID": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "title",
+          "cstring",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetTrivialRange": {
+      "arguments": [],
+      "returns": [
+        [
+          "range",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.GetZoneStoryInfo": {
+      "arguments": [
+        [
+          "uiMapID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "achievementID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "storyMapID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_QuestLog.IsAccountQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isAccountQuest",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsComplete": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isComplete",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsEliteQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isEliteQuest",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsFailed": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isFailed",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsImportantQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isImportant",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsMetaQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isMeta",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsOnMap": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "onMap",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "hasLocalPOI",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsOnQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isOnQuest",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsPushableQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isPushable",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestBounty": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isBounty",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestCalling": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCalling",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestCriteriaForBounty": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "bountyQuestID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCriteriaForBounty",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestDisabledForSession": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isDisabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestFlaggedCompleted": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCompleted",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestFlaggedCompletedOnAccount": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isCompletedOnAccount",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestFromContentPush": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isFromContentPush",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestInvasion": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isInvasion",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestReplayable": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isReplayable",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestReplayedRecently": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "recentlyReplayed",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestTask": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isTask",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsQuestTrivial": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isTrivial",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsRepeatableQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isRepeatable",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsThreatQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isThreat",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsUnitOnQuest": {
+      "arguments": [
+        [
+          "unit",
+          "UnitToken",
+          0,
+          null
+        ],
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isOnQuest",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_QuestLog.IsWorldQuest": {
+      "arguments": [
+        [
+          "questID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isWorldQuest",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.CanEditConfig": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canEdit",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "errorMessage",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.CanPurchaseRank": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "nodeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "nodeEntryID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canPurchase",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.CanRefundRank": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "nodeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canRefund",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetConditionInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "condID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "condInfo",
+          "TraitCondInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetConfigIDBySystemID": {
+      "arguments": [
+        [
+          "systemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetConfigIDByTreeID": {
+      "arguments": [
+        [
+          "treeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetConfigInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "configInfo",
+          "TraitConfigInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetConfigVariationID": {
+      "arguments": [
+        [
+          "systemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "variationID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetConfigsByType": {
+      "arguments": [
+        [
+          "configType",
+          "TraitConfigType",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "configIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetDefinitionInfo": {
+      "arguments": [
+        [
+          "definitionID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "definitionInfo",
+          "TraitDefinitionInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetEntryInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "entryID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "entryInfo",
+          "TraitEntryInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetGroupCurrencyInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "groupIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "groupCurrencyInfos",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetGroupDisplayInfoByTreeID": {
+      "arguments": [
+        [
+          "treeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "displayInfos",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetIncreasedTraitData": {
+      "arguments": [
+        [
+          "nodeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "entryID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemName",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetLoadoutSerializationVersion": {
+      "arguments": [],
+      "returns": [
+        [
+          "serializationVersion",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetMaxAvailableTraitCurrency": {
+      "arguments": [
+        [
+          "traitCurrencyID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "limitBySourcedMax",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "maxAvailable",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetNodeCost": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "nodeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "costs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetNodeInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "nodeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "nodeInfo",
+          "TraitNodeInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetStagedChanges": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "nodeIDsWithPurchases",
+          "table",
+          0,
+          null
+        ],
+        [
+          "nodeIDsWithRefunds",
+          "table",
+          0,
+          null
+        ],
+        [
+          "nodeIDsWithSelectionSwaps",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetStagedChangesCost": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "costs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetSubTreeInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "subTreeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "subTreeInfo",
+          "TraitSubTreeInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetSystemIDByTreeID": {
+      "arguments": [
+        [
+          "treeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "systemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetTraitCurrencyForAchievement": {
+      "arguments": [
+        [
+          "traitCurrencyID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "achievementID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "amount",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetTraitCurrencyInfo": {
+      "arguments": [
+        [
+          "traitCurrencyID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "flags",
+          "number",
+          0,
+          null
+        ],
+        [
+          "type",
+          "number",
+          0,
+          null
+        ],
+        [
+          "currencyTypesID",
+          "number",
+          1,
+          null
+        ],
+        [
+          "icon",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetTraitDescription": {
+      "arguments": [
+        [
+          "entryID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "rank",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "description",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetTraitSystemFlags": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "flags",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetTraitSystemWidgetSetID": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "uiWidgetSetID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetTreeCurrencyInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "treeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "excludeStagedChanges",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "treeCurrencyInfo",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetTreeHash": {
+      "arguments": [
+        [
+          "treeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_Traits.GetTreeInfo": {
+      "arguments": [
+        [
+          "configID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "treeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "treeInfo",
+          "TraitTreeInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.GetTreeNodes": {
+      "arguments": [
+        [
+          "treeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "nodeIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "m": 1
+      }
+    },
+    "C_Traits.IsReadyForCommit": {
+      "arguments": [],
+      "returns": [
+        [
+          "isReadyForCommit",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SkillInfo.GetNumSkillLines": {
+      "arguments": [],
+      "returns": [
+        [
+          "numSkillLines",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SkillInfo.GetSelectedSkill": {
+      "arguments": [],
+      "returns": [
+        [
+          "index",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SkillInfo.GetSkillLineInfo": {
+      "arguments": [
+        [
+          "index",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "skillLineAttributes",
+          "SkillLineAttributes",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SkillInfo.GetSkillLineInfoByID": {
+      "arguments": [
+        [
+          "ID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "skillLineAttributes",
+          "SkillLineAttributes",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.CanPlayerUsePVPTalentUI": {
+      "arguments": [],
+      "returns": [
+        [
+          "canUse",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "failureReason",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.CanPlayerUseTalentSpecUI": {
+      "arguments": [],
+      "returns": [
+        [
+          "canUse",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "failureReason",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.CanPlayerUseTalentUI": {
+      "arguments": [],
+      "returns": [
+        [
+          "canUse",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "failureReason",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetActiveSpecGroup": {
+      "arguments": [
+        [
+          "isInspect",
+          "bool",
+          1,
+          null
+        ],
+        [
+          "isPet",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "groupIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetAllClassIDs": {
+      "arguments": [],
+      "returns": [
+        [
+          "allClassIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetAllSelectedPvpTalentIDs": {
+      "arguments": [],
+      "returns": [
+        [
+          "selectedPvpTalentIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetClassIDFromSpecID": {
+      "arguments": [
+        [
+          "specID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "classID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetCombatConfigIDForSpecGroup": {
+      "arguments": [
+        [
+          "groupIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "configID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetInspectSelectedPvpTalent": {
+      "arguments": [
+        [
+          "inspectedUnit",
+          "UnitToken",
+          0,
+          null
+        ],
+        [
+          "talentIndex",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "selectedTalentID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetInspectSpecialization": {
+      "arguments": [
+        [
+          "unit",
+          "UnitToken",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "specializationID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "s": [
+          "SecretWhenUnitIdentityRestricted"
+        ]
+      }
+    },
+    "C_SpecializationInfo.GetNumSpecializationsForClassID": {
+      "arguments": [
+        [
+          "classID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "specCount",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetPvpTalentAlertStatus": {
+      "arguments": [],
+      "returns": [
+        [
+          "hasUnspentSlot",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "hasNewTalent",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetPvpTalentInfo": {
+      "arguments": [
+        [
+          "talentID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "talentInfo",
+          "PvpTalentInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetPvpTalentSlotInfo": {
+      "arguments": [
+        [
+          "talentIndex",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "slotInfo",
+          "PvpTalentSlotInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetPvpTalentSlotUnlockLevel": {
+      "arguments": [
+        [
+          "talentIndex",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "requiredLevel",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetPvpTalentUnlockLevel": {
+      "arguments": [
+        [
+          "talentID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "requiredLevel",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetSpecIDs": {
+      "arguments": [
+        [
+          "specSetID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "specIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetSpecialization": {
+      "arguments": [
+        [
+          "isInspect",
+          "bool",
+          1,
+          null
+        ],
+        [
+          "isPet",
+          "bool",
+          1,
+          null
+        ],
+        [
+          "specGroupIndex",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "specializationIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetSpecializationInfo": {
+      "arguments": [
+        [
+          "specializationIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "isInspect",
+          "bool",
+          0,
+          false
+        ],
+        [
+          "isPet",
+          "bool",
+          0,
+          false
+        ],
+        [
+          "inspectTarget",
+          "string",
+          1,
+          null
+        ],
+        [
+          "sex",
+          "number",
+          1,
+          null
+        ],
+        [
+          "groupIndex",
+          "luaIndex",
+          1,
+          null
+        ],
+        [
+          "classID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "specId",
+          "number",
+          0,
+          0
+        ],
+        [
+          "name",
+          "string",
+          1,
+          null
+        ],
+        [
+          "description",
+          "string",
+          1,
+          null
+        ],
+        [
+          "icon",
+          "fileID",
+          1,
+          null
+        ],
+        [
+          "role",
+          "string",
+          1,
+          null
+        ],
+        [
+          "primaryStat",
+          "luaIndex",
+          1,
+          null
+        ],
+        [
+          "pointsSpent",
+          "number",
+          0,
+          0
+        ],
+        [
+          "background",
+          "string",
+          1,
+          null
+        ],
+        [
+          "previewPointsSpent",
+          "number",
+          0,
+          0
+        ],
+        [
+          "isUnlocked",
+          "bool",
+          0,
+          true
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetSpecializationMasterySpells": {
+      "arguments": [
+        [
+          "specializationIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "isInspect",
+          "bool",
+          1,
+          null
+        ],
+        [
+          "isPet",
+          "bool",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "spellIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetSpellsDisplay": {
+      "arguments": [
+        [
+          "specializationID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "spellID",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.GetTalentInfo": {
+      "arguments": [
+        [
+          "query",
+          "TalentInfoQuery",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "TalentInfoResult",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.IsInitialized": {
+      "arguments": [],
+      "returns": [
+        [
+          "isSpecializationDataInitialized",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.IsPvpTalentLocked": {
+      "arguments": [
+        [
+          "talentID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "locked",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_SpecializationInfo.IsSpecSelectionEnabled": {
+      "arguments": [
+        [
+          "classID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "enabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.CanStoreEnchantInItem": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canStore",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.CanTradeSkillShowCraftingUI": {
+      "arguments": [
+        [
+          "tradeSkillSpellID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "canShow",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.CancelProfessionRespec": {
+      "arguments": [],
+      "returns": [],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetAllProfessionTradeSkillLines": {
+      "arguments": [],
+      "returns": [
+        [
+          "skillLineID",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetBaseProfessionInfo": {
+      "arguments": [],
+      "returns": [
+        [
+          "info",
+          "ProfessionInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetChildProfessionInfo": {
+      "arguments": [],
+      "returns": [
+        [
+          "info",
+          "ProfessionInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetChildProfessionInfos": {
+      "arguments": [],
+      "returns": [
+        [
+          "infos",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetConcentrationCurrencyID": {
+      "arguments": [
+        [
+          "skillLineID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "currencyType",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetCraftableCount": {
+      "arguments": [
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "recipeLevel",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "numAvailable",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetCraftingOperationInfo": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "craftingReagents",
+          "table",
+          0,
+          null
+        ],
+        [
+          "allocationItemGUID",
+          "WOWGUID",
+          1,
+          null
+        ],
+        [
+          "applyConcentration",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "CraftingOperationInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetCraftingOperationInfoForOrder": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "craftingReagents",
+          "table",
+          0,
+          null
+        ],
+        [
+          "orderID",
+          "BigUInteger",
+          0,
+          null
+        ],
+        [
+          "applyConcentration",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "CraftingOperationInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetCraftingReagentBonusText": {
+      "arguments": [
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "craftingReagentIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "craftingReagents",
+          "table",
+          0,
+          null
+        ],
+        [
+          "allocationItemGUID",
+          "WOWGUID",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "bonusText",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetCraftingTargetItems": {
+      "arguments": [
+        [
+          "itemIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "items",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetDependentReagents": {
+      "arguments": [
+        [
+          "reagent",
+          "CraftingReagent",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "reagents",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetEnchantItems": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "craftingReagents",
+          "table",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "items",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetFactionSpecificOutputItem": {
+      "arguments": [
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetGatheringOperationInfo": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "GatheringOperationInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetHideUnownedFlags": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "cannotModifyHideUnowned",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "alwaysShowUnowned",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetItemCraftedQualityByItemInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "quality",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetItemCraftedQualityInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "CraftingQualityInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetItemReagentQualityByItemInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "quality",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetItemReagentQualityInfo": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "CraftingQualityInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetItemSlotModifications": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "slotMods",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetItemSlotModificationsForOrder": {
+      "arguments": [
+        [
+          "orderID",
+          "BigUInteger",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "slotMods",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetOriginalCraftRecipeID": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "recipeID",
+          "number",
+          1,
+          null
+        ],
+        [
+          "skillLineAbilityID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionByInventorySlot": {
+      "arguments": [
+        [
+          "slot",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "profession",
+          "Profession",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionChildSkillLineID": {
+      "arguments": [],
+      "returns": [
+        [
+          "skillLineID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionForCursorItem": {
+      "arguments": [],
+      "returns": [
+        [
+          "profession",
+          "Profession",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionInfoByRecipeID": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "ProfessionInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionInfoBySkillLineID": {
+      "arguments": [
+        [
+          "skillLineID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "ProfessionInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionInventorySlots": {
+      "arguments": [],
+      "returns": [
+        [
+          "invSlots",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionNameForSkillLineAbility": {
+      "arguments": [
+        [
+          "skillLineAbilityID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "professionNmae",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionSkillLineID": {
+      "arguments": [
+        [
+          "profession",
+          "Profession",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "skillLineID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionSlots": {
+      "arguments": [
+        [
+          "profession",
+          "Profession",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "slots",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetProfessionSpells": {
+      "arguments": [
+        [
+          "professionID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "skillLineID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "knownSpells",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetQualitiesForRecipe": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "qualityIDs",
+          "table",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetReagentDifficultyText": {
+      "arguments": [
+        [
+          "craftingReagentIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "craftingReagents",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "bonusText",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetReagentSlotStatus": {
+      "arguments": [
+        [
+          "mcrSlotID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "skillLineAbilityID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "locked",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "lockedReason",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeDescription": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "craftingReagents",
+          "table",
+          0,
+          null
+        ],
+        [
+          "allocationItemGUID",
+          "WOWGUID",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "description",
+          "string",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeInfo": {
+      "arguments": [
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "recipeLevel",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "recipeInfo",
+          "TradeSkillRecipeInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeInfoForSkillLineAbility": {
+      "arguments": [
+        [
+          "skillLineAbilityID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "recipeLevel",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "recipeInfo",
+          "TradeSkillRecipeInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeItemQualityInfo": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "quality",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "info",
+          "CraftingQualityInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeOutputItemData": {
+      "arguments": [
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "reagents",
+          "table",
+          1,
+          null
+        ],
+        [
+          "allocationItemGUID",
+          "WOWGUID",
+          1,
+          null
+        ],
+        [
+          "overrideQualityID",
+          "number",
+          1,
+          null
+        ],
+        [
+          "recraftOrderID",
+          "BigUInteger",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "outputInfo",
+          "CraftingRecipeOutputInfo",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeQualityItemIDs": {
+      "arguments": [
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "qualityItemIDs",
+          "table",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeQualityReagentLink": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "dataSlotIndex",
+          "luaIndex",
+          0,
+          null
+        ],
+        [
+          "qualityIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "link",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeRequirements": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "requirements",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipeSchematic": {
+      "arguments": [
+        [
+          "recipeSpellID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "isRecraft",
+          "bool",
+          0,
+          null
+        ],
+        [
+          "recipeLevel",
+          "luaIndex",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "schematic",
+          "CraftingRecipeSchematic",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecipesTracked": {
+      "arguments": [
+        [
+          "isRecraft",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "recipeIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecraftItems": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "items",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRecraftRemovalWarnings": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ],
+        [
+          "replacedReagents",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "warnings",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetRemainingRecasts": {
+      "arguments": [],
+      "returns": [
+        [
+          "remaining",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetSalvagableItemIDs": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "itemIDs",
+          "table",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetShowLearned": {
+      "arguments": [],
+      "returns": [
+        [
+          "flag",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetShowUnlearned": {
+      "arguments": [],
+      "returns": [
+        [
+          "flag",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetSkillLineForGear": {
+      "arguments": [
+        [
+          "itemInfo",
+          "ItemInfo",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "skillLineID",
+          "number",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetSourceTypeFilter": {
+      "arguments": [],
+      "returns": [
+        [
+          "sourceTypeFilter",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.GetTradeSkillDisplayName": {
+      "arguments": [
+        [
+          "skillLineID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "professionDisplayName",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsEnchantTargetValid": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ],
+        [
+          "craftingReagents",
+          "table",
+          1,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "valid",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsGuildTradeSkillsEnabled": {
+      "arguments": [],
+      "returns": [
+        [
+          "enabled",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsNPCCrafting": {
+      "arguments": [],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsNearProfessionSpellFocus": {
+      "arguments": [
+        [
+          "profession",
+          "Profession",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "nearFocus",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsOriginalCraftRecipeLearned": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "learned",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRecipeFirstCraft": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRecipeInBaseSkillLine": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRecipeInSkillLine": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "skillLineID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRecipeProfessionLearned": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "recipeProfessionLearned",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRecipeTracked": {
+      "arguments": [
+        [
+          "recipeID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "isRecraft",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "tracked",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRecraftItemEquipped": {
+      "arguments": [
+        [
+          "recraftItemGUID",
+          "WOWGUID",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "isEquipped",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRecraftReagentValid": {
+      "arguments": [
+        [
+          "itemGUID",
+          "WOWGUID",
+          0,
+          null
+        ],
+        [
+          "reagent",
+          "CraftingReagent",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "valid",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_TradeSkillUI.IsRuneforging": {
+      "arguments": [],
+      "returns": [
+        [
+          "result",
+          "bool",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "UnitClass": {
+      "arguments": [
+        [
+          "unit",
+          "UnitToken",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "className",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "classFilename",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "classID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "s": [
+          "SecretWhenUnitIdentityRestricted"
+        ],
+        "m": 1
+      }
+    },
+    "UnitLevel": {
+      "arguments": [
+        [
+          "name",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "UnitName": {
+      "arguments": [
+        [
+          "unit",
+          "UnitToken",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "unitName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "unitServer",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "s": [
+          "SecretWhenUnitNameIdentityRestricted"
+        ],
+        "at": 1
+      }
+    },
+    "UnitRace": {
+      "arguments": [
+        [
+          "unit",
+          "UnitToken",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "localizedRaceName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "englishRaceName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "raceID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {
+        "s": [
+          "SecretWhenUnitIdentityRestricted"
+        ],
+        "m": 1
+      }
+    },
+    "C_AuctionHouse.GetCommoditySearchResultInfo": {
+      "arguments": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ],
+        [
+          "commoditySearchResultIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "CommoditySearchResultInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_AuctionHouse.GetItemSearchResultInfo": {
+      "arguments": [
+        [
+          "itemKey",
+          "ItemKey",
+          0,
+          null
+        ],
+        [
+          "itemSearchResultIndex",
+          "luaIndex",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "result",
+          "ItemSearchResultInfo",
+          1,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_AuctionHouse.GetNumCommoditySearchResults": {
+      "arguments": [
+        [
+          "itemID",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "numSearchResults",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "C_AuctionHouse.GetNumItemSearchResults": {
+      "arguments": [
+        [
+          "itemKey",
+          "ItemKey",
+          0,
+          null
+        ]
+      ],
+      "returns": [
+        [
+          "numItemSearchResults",
+          "number",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    },
+    "UnitFactionGroup": {
+      "arguments": [
+        [
+          "unitName",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "checkDisplayRace",
+          "bool",
+          0,
+          false
+        ]
+      ],
+      "returns": [
+        [
+          "factionGroupTag",
+          "cstring",
+          0,
+          null
+        ],
+        [
+          "localized",
+          "cstring",
+          0,
+          null
+        ]
+      ],
+      "flags": {}
+    }
+  }
+}

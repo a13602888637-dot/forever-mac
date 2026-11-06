@@ -1,0 +1,15 @@
+## Interface: 16001
+## Title: Forever AI Companion
+## Notes: 魔兽世界：无限 · 角色级只读快照与本地 AI 助手
+## Author: Forever AI
+## Version: 0.1.1
+## SavedVariablesPerCharacter: ForeverAICharDB
+
+Core.lua
+CatalogData.lua
+Catalog.lua
+Auction.lua
+Collector.lua
+UI.lua
+Export.lua
+Auto.lua

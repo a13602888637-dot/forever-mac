@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.local
+data/
+*.sqlite*
+outputs/
+dist/
+*.egg-info/
+*.app/
+.DS_Store
+
+# Local browser sessions and development-only progress
+.playwright-cli/
+docs/DEVELOPMENT-CHECKPOINT.md
+frontend/qa/

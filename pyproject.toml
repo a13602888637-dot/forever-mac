@@ -1,0 +1,41 @@
+[project]
+name = "forever-ai-companion"
+version = "0.2.1"
+description = "魔兽世界：无限 · Intel Mac 插件管理与离线开发工作台"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "fastapi>=0.115,<1", "uvicorn>=0.34,<1", "pydantic>=2.10,<3",
+  "openai>=2,<3", "jinja2>=3.1.6,<4", "python-multipart>=0.0.20,<1",
+  "python-dotenv>=1,<2", "httpx>=0.28,<1", "mcp==1.26.0", "lupa>=2.4,<3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "lupa>=2.4,<3", "ruff>=0.11,<1"]
+
+[project.scripts]
+foreverai = "backend.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["backend"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"frontend" = "frontend"
+"fixtures" = "fixtures"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.uv]
+# cryptography 49+ no longer publishes Intel macOS wheels.
+constraint-dependencies = ["cryptography<49"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
