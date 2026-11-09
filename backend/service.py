@@ -3,6 +3,7 @@ from __future__ import annotations
 from decimal import Decimal, InvalidOperation
 import hashlib
 from pathlib import Path
+import time
 
 from pydantic import Field, StrictInt
 
@@ -25,6 +26,7 @@ class ComparisonInput(Model):
     reference_item_id: PositiveID | None = None
     manual_item: Item | None = None
     weights: dict[str, float] | None = None
+    expected_snapshot_id: str | None = Field(default=None, max_length=200)
 
 
 class EconomyInput(Model):
@@ -113,6 +115,8 @@ class Companion:
 
     def compare(self, request: ComparisonInput):
         snapshot_id, snapshot = self.require_snapshot()
+        if request.expected_snapshot_id is not None and request.expected_snapshot_id != snapshot_id:
+            raise ValueError("角色或行囊快照已更新，请刷新页面后重新选择物品")
         current = next((item for item in snapshot.equipment or [] if item.slot == request.slot and item.item_id and item.status == "available"), None)
         if current is None:
             raise ValueError("选定槽位没有可比较的已知装备")
@@ -156,13 +160,18 @@ class Companion:
             recipe = next((r for r in snapshot.recipes or [] if r.recipe_id == request.recipe_id), None)
             if recipe is None:
                 raise ValueError("当前快照没有该配方；也可选择资料库或手工配方")
-        prices = {p["item_id"]: p["copper"] for p in self.db.prices(self.settings.mode, snapshot.character.realm)}
+        price_rows, market_status, _ = self.market.available(snapshot)
+        prices = {key: row["copper"] for key, row in price_rows.items()}
+        # Explicit local observations override a public reference only while fresh.
+        prices.update({p["item_id"]: p["copper"] for p in self.db.prices(self.settings.mode, snapshot.character.realm)
+                       if 0 <= time.time() - p["recorded_at"] <= 86400})
         try:
             rate = Decimal(str(request.fee_percent)) if request.fee_percent not in (None, "") else None
         except InvalidOperation:
             raise ValueError("手续费率格式无效") from None
-        result = economy_quote(recipe, prices, request.sale_unit_copper, rate, request.batches, request.extra_cost_copper)
-        result.update(source=source, snapshot_id=snapshot_id, recipe_name=recipe.name)
+        sale = request.sale_unit_copper if request.sale_unit_copper is not None else prices.get(recipe.output_item_id)
+        result = economy_quote(recipe, prices, sale, rate, request.batches, request.extra_cost_copper)
+        result.update(source=source, snapshot_id=snapshot_id, recipe_name=recipe.name, market_status=market_status)
         return result
 
     async def advice(self, question=None):
@@ -172,7 +181,7 @@ class Companion:
         snapshot_id, snapshot = latest if latest else ("general", None)
         refs = []
         # Only cached, explicitly versioned matches may enter the model context.
-        if question and snapshot and self.db.reference_status():
+        if question and self.db.reference_status():
             refs = self.refs.context_matches(question, snapshot)
         result, engine = await self.advisor.generate(snapshot, snapshot_id, question, refs)
         if snapshot:

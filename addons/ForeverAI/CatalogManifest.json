@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "build": "1.60.1.70450",
-  "built_at": "2026-10-26T17:59:20+11:00",
+  "build": "1.60.1.70862",
+  "built_at": "2026-11-09T15:25:30+11:00",
   "source": "https://wuxianwow.com/about",
-  "item_count": 15496,
-  "recipe_count": 2594,
-  "sha256": "e4f694e7b931e0af8cad57963dda6d644ab0fdbfa872d613ae0a582ba7087f72"
+  "item_count": 19216,
+  "recipe_count": 2595,
+  "sha256": "6327eb04a8a77b33198e79db92ab1270e931015df9fa0304c0aa940651680f51"
 }

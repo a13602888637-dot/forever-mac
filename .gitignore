@@ -8,6 +8,7 @@ data/
 *.sqlite*
 outputs/
 dist/
+delete/
 *.egg-info/
 *.app/
 .DS_Store

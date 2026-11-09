@@ -29,7 +29,7 @@ def evidence_context(snapshot: Snapshot, snapshot_id: str, references=None):
     for section in ("client", "character", "equipment", "bags", "professions", "recipes", "talents", "quests"):
         value = dumped[section]
         if section == "character":
-            value = {k: v for k, v in value.items() if k not in ("name", "realm")}
+            value = {k: v for k, v in value.items() if k not in ("name", "realm", "storage_name", "storage_realm_id")}
         complete = True
         if isinstance(value, list):
             limit = {"bags": 100, "recipes": 40, "quests": 50}.get(section, 100)
@@ -96,11 +96,13 @@ class Advisor:
             result = rule_plan(snapshot, snapshot_id, question)
             return result, "mock-rules" if self.settings.mode == "mock" else "rules-no-api-key"
         context = evidence_context(snapshot, snapshot_id, references) if snapshot else {
-            "evidence": {}, "data_mode": "live", "unavailable": {"character": "尚无落盘角色快照，不能断言角色装备或进度"}}
+            "evidence": {ref["evidence_id"]: ref for ref in references or []}, "data_mode": "live",
+            "unavailable": {"character": "尚无落盘角色快照，不能断言角色装备或进度"}}
         context["evidence"]["platform:foreverui"] = {"provenance": "verified", "value": {
             "name": "ForeverUI", "theme": "亡灵奥术", "independent": True, "depends_on_ellesmere": False,
             "panel_command": "/fui", "restore_command": "/fui off", "edit_command": "/fui edit",
             "compact_layout_command": "/fui layout compact", "undo_layout_command": "/fui layout undo",
+            "actionbar_layout": "0.2.2 仅换肤；位置、尺寸和显隐由游戏原生编辑模式管理，紧凑布局不调整动作条",
             "hide_floating_cooldowns_command": "/fui icons off", "show_floating_cooldowns_command": "/fui icons on",
             "desktop_installation": {"location": "Mac 桌面应用", "button": "备份并应用", "purpose": "安装或更新插件文件"},
             "in_game_activation": {"location": "进入角色后的游戏内 /fui 面板", "button": "应用亡灵奥术",

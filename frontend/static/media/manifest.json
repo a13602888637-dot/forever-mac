@@ -1,0 +1,252 @@
+{
+  "dbm-icon": {
+    "file": "dbm-icon.png",
+    "source_url": "https://github.com/DeadlyBossMods/DeadlyBossMods",
+    "caption": "DBM-Core 通过 TOC 指定的作者图标",
+    "kind": "project_icon",
+    "sha256": "d2cc9905df479636adf5c88994564eff66532d1f7863fa287fde637165fae360",
+    "verified_on": "2026-11-06",
+    "source_asset": "DBM-Core/textures/dbm_airhorn.blp"
+  },
+  "ellesmere-icon": {
+    "file": "ellesmere-icon.png",
+    "source_url": "https://github.com/EllesmereGaming/EllesmereUI",
+    "caption": "EllesmereUI 通过 TOC 指定的作者图标",
+    "kind": "project_icon",
+    "sha256": "1f509d01c36753760a5ee1923df4d176263038a51084ebf2b28deb2e0a39ed53",
+    "verified_on": "2026-11-06",
+    "source_asset": "EllesmereUI/media/eg-logo.tga"
+  },
+  "bigwigs-icon": {
+    "file": "bigwigs-icon.png",
+    "source_url": "https://github.com/BigWigsMods/BigWigs",
+    "caption": "BigWigs 通过 TOC 指定的作者图标",
+    "kind": "project_icon",
+    "sha256": "8c6ff189218fcf84514241ae1429e2482bd17ae871f52b139cab492913fbf442",
+    "verified_on": "2026-11-06",
+    "source_asset": "BigWigs/Media/Icons/minimap_raid.tga"
+  },
+  "littlewigs-icon": {
+    "file": "littlewigs-icon.png",
+    "source_url": "https://github.com/BigWigsMods/LittleWigs",
+    "caption": "LittleWigs 通过 TOC 指定的作者图标",
+    "kind": "project_icon",
+    "sha256": "adc7bcebf82f69a988f91618b755860674639bd48fa724650cf03284d174be79",
+    "verified_on": "2026-11-06",
+    "source_asset": "BigWigs/Media/Icons/minimap_party.tga"
+  },
+  "details-icon": {
+    "file": "details-icon.png",
+    "source_url": "https://www.curseforge.com/wow/addons/details",
+    "caption": "Details! 通过 TOC 指定的作者图标",
+    "kind": "project_icon",
+    "sha256": "184f7900fac5c725af3aba28576d1e239b752a32f25962a963444d8b1b743436",
+    "verified_on": "2026-11-06",
+    "source_asset": "Details/images/minimap.tga"
+  },
+  "bagbrother-icon": {
+    "file": "bagbrother-icon.png",
+    "source_url": "https://github.com/Jaliborc/BagBrother",
+    "caption": "BagBrother 通过 TOC 指定的作者图标",
+    "kind": "project_icon",
+    "sha256": "5eda5fd94616653d10ac6d5e1618fbbb6eb70c856991cf1a4c560dc3b4cfbedd",
+    "verified_on": "2026-11-06",
+    "source_asset": "BagBrother/art/bagbrother-small.tga"
+  },
+  "forever-icon": {
+    "file": "forever-icon.png",
+    "source_url": null,
+    "caption": "Forever 项目图标",
+    "kind": "project_icon",
+    "sha256": "fbbceb012d45f067a26df29c709e75eda9698ed6f0145ab35c1c96dac0cbfa26",
+    "verified_on": "2026-11-06"
+  },
+  "category-addon": {
+    "file": "category-addon.svg",
+    "source_url": null,
+    "caption": "未知插件的类别占位图",
+    "kind": "project_icon",
+    "sha256": "d537584ceef2420951d004dc1272baf93716db512f3382982f5305ca2a214eb1",
+    "verified_on": "2026-11-06"
+  },
+  "forever-layout": {
+    "file": "forever-layout.svg",
+    "source_url": null,
+    "caption": "ForeverUI 0.2.0 布局示意，依据当前源码；不是游戏截图",
+    "kind": "layout_diagram",
+    "sha256": "403f4416cbecf1219a0a023d4b5db0a2f8b1487ff5111eb322507bb0f2601f9a",
+    "verified_on": "2026-11-06"
+  },
+  "ellesmere-preview": {
+    "file": "ellesmere-preview.webp",
+    "thumbnail": "ellesmere-preview-thumb.webp",
+    "source_url": "https://media.forgecdn.net/attachments/1664/341/1-png.png",
+    "caption": "EllesmereUI 作者公开截图，客户端版本未标明",
+    "kind": "author_screenshot",
+    "sha256": "4d94c4fec19a5b1071009490af8abf29417e96135114e1990f28a6199fe3648b",
+    "verified_on": "2026-11-06"
+  },
+  "ellesmere-editor": {
+    "file": "ellesmere-editor.webp",
+    "thumbnail": "ellesmere-editor-thumb.webp",
+    "source_url": "https://media.forgecdn.net/attachments/1663/775/2-png.png",
+    "caption": "EllesmereUI 作者公开编辑器截图，客户端版本未标明",
+    "kind": "author_screenshot",
+    "sha256": "3c4c1f46d27d8f0be4175c62287e02b049d63e32032896725ed77e5c97f4707c",
+    "verified_on": "2026-11-06"
+  },
+  "details-preview": {
+    "file": "details-preview.webp",
+    "thumbnail": "details-preview-thumb.webp",
+    "source_url": "https://media.forgecdn.net/attachments/215/323/mainwindow.png",
+    "caption": "Details! 作者公开窗口截图，客户端版本未标明",
+    "kind": "author_screenshot",
+    "sha256": "a7f2ac450d18332d52061b7a087c29272d9e43390a891656abe101f573368963",
+    "verified_on": "2026-11-06"
+  },
+  "dbm-preview": {
+    "file": "dbm-preview.webp",
+    "thumbnail": "dbm-preview-thumb.webp",
+    "source_url": "https://media.forgecdn.net/attachments/76/27/dbm-warnings1.png",
+    "caption": "DBM 作者历史警告截图，不能代表当前无限版本外观",
+    "kind": "author_screenshot",
+    "sha256": "5ea11b5a80ccb7a7b96c6d4b47507cc9aaa9d774adf771b06c6ca62e00056855",
+    "verified_on": "2026-11-06"
+  },
+  "race-8": {
+    "file": "race-8.jpg",
+    "source_url": "https://wuxianwow.com/share/race-8.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "34b79f493c3a9de5a6788247fd66757d208b2ffea7aa96e2a62adb8729f92f41",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626008": {
+    "file": "626008.jpg",
+    "source_url": "https://wuxianwow.com/share/626008.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "74913dd83fb8e0dfa086533ec918fe1eaba2fc55eb5a6ff4bb89c919f24c4233",
+    "verified_on": "2026-11-06"
+  },
+  "race-2": {
+    "file": "race-2.jpg",
+    "source_url": "https://wuxianwow.com/share/race-2.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "4506de5e4e2e5a51385cb0a3374676d3017212c057072d42c4800d6baa1f2958",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626005": {
+    "file": "626005.jpg",
+    "source_url": "https://wuxianwow.com/share/626005.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "0a9cd9becbecc669edec85d822d331813f4236272df0cb83bedf0c7a350a1ec9",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626004": {
+    "file": "626004.jpg",
+    "source_url": "https://wuxianwow.com/share/626004.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "4fddd433ba0a8a14ff22112ccae439ede0b4912c5715c7c1658b9c6f8136b5e4",
+    "verified_on": "2026-11-06"
+  },
+  "race-3": {
+    "file": "race-3.jpg",
+    "source_url": "https://wuxianwow.com/share/race-3.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "97182ca84021f6675bd28353eec68978611045c1a127c69db39b09f46f0ae8a4",
+    "verified_on": "2026-11-06"
+  },
+  "race-1": {
+    "file": "race-1.jpg",
+    "source_url": "https://wuxianwow.com/share/race-1.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "bdb6280fe548843215e50ef49e0111098c56ccf6c5c87f8d1606aba42f1d7937",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626006": {
+    "file": "626006.jpg",
+    "source_url": "https://wuxianwow.com/share/626006.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "a7826c7d35799bd73b695f74d3df430b54f2244a3c87b5a5c15a7b7c0dc498bf",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626007": {
+    "file": "626007.jpg",
+    "source_url": "https://wuxianwow.com/share/626007.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "77ce5e7623f041fce447b5bf1febd3163475bc7a7e778c2778838ca81fbb1162",
+    "verified_on": "2026-11-06"
+  },
+  "race-4": {
+    "file": "race-4.jpg",
+    "source_url": "https://wuxianwow.com/share/race-4.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "24bec6be5139b872683e894c5de26a4a92780efbbff934dbd565ce0fe8415e29",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626003": {
+    "file": "626003.jpg",
+    "source_url": "https://wuxianwow.com/share/626003.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "28981268c85bf7f694b55d17891af11c1d75a517867ab9c227aa41e32098b90e",
+    "verified_on": "2026-11-06"
+  },
+  "race-5": {
+    "file": "race-5.jpg",
+    "source_url": "https://wuxianwow.com/share/race-5.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "dfaa53f13c0362b57908cacd8208a9b0d18f7022b57ec15d8b4e2893f325ce7a",
+    "verified_on": "2026-11-06"
+  },
+  "race-7": {
+    "file": "race-7.jpg",
+    "source_url": "https://wuxianwow.com/share/race-7.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "d950a01fbd1ffd876fd447cd7af0ea9d4bca6f52a286b6393c4390a74d0ca46a",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626000": {
+    "file": "626000.jpg",
+    "source_url": "https://wuxianwow.com/share/626000.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "795e70a0e1ba46bdaa24d19c9654ae2604b1eb60251596b951f1ee8ff1f6ac6e",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-626001": {
+    "file": "626001.jpg",
+    "source_url": "https://wuxianwow.com/share/626001.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "d7963e00f25aaa9bb2f8341742426027e0c4d157c12f182f128b678515afb930",
+    "verified_on": "2026-11-06"
+  },
+  "race-6": {
+    "file": "race-6.jpg",
+    "source_url": "https://wuxianwow.com/share/race-6.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "4cfcdc1b316f3eea072602ce1bebe49331c8a317a0ce37e490d34eeb4cd25faf",
+    "verified_on": "2026-11-06"
+  },
+  "wow-icon-625999": {
+    "file": "625999.jpg",
+    "source_url": "https://wuxianwow.com/share/625999.jpg",
+    "caption": "无限图鉴公开职业或种族图标",
+    "kind": "game_icon",
+    "sha256": "3607495caf8d2b52ddfd4a1da368e44e4c6318e74fe4b8b5d06c62edb9b20497",
+    "verified_on": "2026-11-06"
+  }
+}

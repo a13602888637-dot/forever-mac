@@ -46,6 +46,10 @@ class Database:
                   source TEXT NOT NULL, provenance TEXT NOT NULL,
                   UNIQUE(mode,scope,item_id,copper,observed_at,source));
                 CREATE INDEX IF NOT EXISTS market_lookup ON market_prices(mode,scope,item_id,observed_at DESC,id DESC);
+                CREATE TABLE IF NOT EXISTS market_snapshots (
+                  mode TEXT NOT NULL, scope TEXT NOT NULL, observed_at INTEGER NOT NULL,
+                  fetched_at INTEGER NOT NULL, payload TEXT NOT NULL,
+                  PRIMARY KEY(mode,scope,observed_at));
                 CREATE TABLE IF NOT EXISTS auto_task_links (
                   mode TEXT NOT NULL, character_id TEXT NOT NULL, key TEXT NOT NULL, task_id INTEGER NOT NULL,
                   PRIMARY KEY(mode,character_id,key));
@@ -181,14 +185,31 @@ class Database:
 
     def save_market_prices(self, mode, scope, prices, source, provenance):
         with self.connect() as conn:
-            for price in prices:
-                if type(price.get("item_id")) is not int or type(price.get("copper")) is not int or not 0 <= price["copper"] <= 10**14:
-                    raise ValueError("自动报价格式无效")
-                observed = price["observed_at"]
-                if type(observed) is not int or observed > time.time() + 300 or observed < 1577836800:
-                    raise ValueError("自动报价时间无效")
-                conn.execute("INSERT OR IGNORE INTO market_prices(mode,scope,item_id,copper,observed_at,source,provenance) VALUES(?,?,?,?,?,?,?)",
-                             (mode, scope, price["item_id"], price["copper"], observed, source, provenance))
+            self._insert_market_prices(conn, mode, scope, prices, source, provenance)
+
+    @staticmethod
+    def _insert_market_prices(conn, mode, scope, prices, source, provenance):
+        for price in prices:
+            if type(price.get("item_id")) is not int or price["item_id"] <= 0 or type(price.get("copper")) is not int or not 0 <= price["copper"] <= 10**14:
+                raise ValueError("自动报价格式无效")
+            observed = price["observed_at"]
+            if type(observed) is not int or observed > time.time() + 300 or observed < 1577836800:
+                raise ValueError("自动报价时间无效")
+            conn.execute("INSERT OR IGNORE INTO market_prices(mode,scope,item_id,copper,observed_at,source,provenance) VALUES(?,?,?,?,?,?,?)",
+                         (mode, scope, price["item_id"], price["copper"], observed, source, provenance))
+
+    def save_market_snapshot(self, mode, metadata, prices):
+        """Publish an entire checked market observation atomically, never a partial page."""
+        with self.connect() as conn:
+            self._insert_market_prices(conn, mode, metadata["scope"], prices, metadata["source"], "assumption")
+            conn.execute("INSERT INTO market_snapshots VALUES(?,?,?,?,?) ON CONFLICT(mode,scope,observed_at) DO UPDATE SET fetched_at=excluded.fetched_at,payload=excluded.payload",
+                         (mode, metadata["scope"], metadata["observed_at"], int(time.time()),
+                          json.dumps(metadata, ensure_ascii=False)))
+
+    def market_snapshot(self, mode, scope):
+        with self.connect() as conn:
+            row = conn.execute("SELECT payload FROM market_snapshots WHERE mode=? AND scope=? ORDER BY observed_at DESC LIMIT 1", (mode, scope)).fetchone()
+        return json.loads(row[0]) if row else None
 
     def market_prices(self, mode, scopes):
         if not scopes:

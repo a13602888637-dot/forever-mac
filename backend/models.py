@@ -29,17 +29,29 @@ class Character(Model):
     race_token: Text | None
     specialization: Text | None
     faction: Text | None = None
+    # Desktop-derived storage metadata. It never replaces game-reported names
+    # and is excluded from model prompts.
+    storage_name: Annotated[StrictStr, Field(min_length=1, max_length=200)] | None = None
+    storage_realm_id: PositiveID | None = None
 
-    @field_validator("name", "realm")
+    @field_validator("name", "realm", "storage_name")
     @classmethod
-    def identity_text(cls, value: str) -> str:
+    def identity_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return value
         if value != value.strip() or any(ord(c) < 32 or c in "/\\" for c in value):
             raise ValueError("角色名和服务器不得包含路径、控制字符或首尾空格")
         return value
 
     @property
     def identity(self) -> str:
+        if self.storage_name is not None and self.storage_realm_id is not None:
+            return f"{self.storage_realm_id}:{self.storage_name}"
         return f"{self.realm}:{self.name}"
+
+    @property
+    def display_name(self) -> str:
+        return self.storage_name.replace("-", " ") if self.storage_name else self.name
 
 
 class Item(Model):
@@ -175,6 +187,9 @@ class Snapshot(Model):
                 for i, child in enumerate(value):
                     visit(child, f"{path}.{i}")
         value = self.model_dump(exclude={"unavailable", "capabilities"})
+        # These fields describe a local save location, not missing game data.
+        for key in ("storage_name", "storage_realm_id"):
+            value["character"].pop(key, None)
         # Location-only optional fields are not unknown game data.
         for section in ("equipment", "bags"):
             for item in value.get(section) or []:

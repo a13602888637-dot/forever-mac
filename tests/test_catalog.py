@@ -59,7 +59,12 @@ def test_full_bundled_catalog_counts_lookup_and_snapshot_separation():
     assert count(data["recipes"]) == manifest["recipe_count"]
     assert count(data["items"]) >= 15496 and count(data["recipes"]) >= 2594
     assert lua.globals().ForeverAI.FindCatalog("items", "10001", 10)[1].name == "黑色魔纹长袍"
+    # The bundled public dataset can advance independently of the older runtime fixture.
+    version, build = manifest["build"].rsplit(".", 1)
+    lua.execute("GetBuildInfo = function() return " + json.dumps(version) + ", " + json.dumps(build) + ", \"catalog fixture\", 16001 end")
     assert lua.globals().ForeverAI.CatalogStatus().matches is True
+    lua.execute('GetBuildInfo = function() return "1.0.0", "1", "older", 16001 end')
+    assert lua.globals().ForeverAI.CatalogStatus().matches is False
     assert lua.globals().ForeverAI.Export() is True
     raw = lua.globals().ForeverAICharDB.snapshot_json
     assert len(raw) < 50000

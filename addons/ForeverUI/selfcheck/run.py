@@ -50,12 +50,28 @@ ForeverUI.ShowConfig(); assert(ForeverUI.config:IsShown())
 """)
 layout = load()
 layout.execute("""
+MainActionBar:SetSize(620,48); MainActionBar:SetScale(.85)
+MainActionBar:ClearAllPoints(); MainActionBar:SetPoint('BOTTOM',UIParent,'BOTTOM',17,91)
+ActionButton1:SetSize(42,42)
+ActionButton1.container:SetSize(48,48)
+ActionButton1.normal:SetAlpha(.6)
+local originalFont,originalSize,originalFlags=ActionButton1.HotKey:GetFont()
+MOCK.LockBarWrites()
 assert(ForeverUI.ApplyProfile())
-assert(MainActionBar:GetWidth()==452 and ActionButton1:GetWidth()==34)
-assert(ActionButton12:GetPoint(1)=='TOPLEFT')
-local _,parent,_,x,y=ActionButton12:GetPoint(1)
-assert(parent==MainActionBar and x==418 and y==0)
-assert(MultiBarBottomLeft:GetWidth()==MainActionBar:GetWidth())
+assert(ForeverUI.modules.actionbars.active, ForeverUI.modules.actionbars.error)
+assert(MainActionBar:GetWidth()==620 and MainActionBar:GetScale()==.85 and ActionButton1:GetWidth()==42)
+local point,parent,relative,x,y=MainActionBar:GetPoint(1)
+assert(point=='BOTTOM' and parent==UIParent and x==17 and y==91)
+assert(ActionButton12:GetPoint(1)=='CENTER')
+assert(ActionButton12:GetParent()==ActionButton12.container)
+assert(ActionButton1.container:GetWidth()==48)
+assert(ActionButton1.icon.coords[1]==.07 and ActionButton1.normal:GetAlpha()==0, 'skin actually applies')
+local _,size=ActionButton1.HotKey:GetFont(); assert(size==10)
+for _,info in pairs(ForeverUI.movers) do assert(info.owner~='actionbars', 'native bars have no FUI mover') end
+for _,rec in ipairs(ForeverUI.native.actionbars) do
+ assert(rec.frame:GetObjectType()=='Texture' or rec.frame:GetObjectType()=='FontString')
+ assert(not rec.points and not rec.hasParent and not rec.size and not rec.scale)
+end
 assert(EssentialCooldownViewer:GetParent()==ForeverUI.hider and UtilityCooldownViewer:GetParent()==ForeverUI.hider)
 assert(ExtraActionButton1:GetParent()==UIParent and ZoneAbilityFrame:GetParent()==UIParent)
 ForeverUI.SetCooldownIcons(true)
@@ -65,6 +81,9 @@ MOCK.combat=true
 local before=MOCK.mutations
 ForeverUI.SetCooldownIcons(true); ForeverUI.ApplyCompactLayout()
 MOCK.Fire('ACTIONBAR_PAGE_CHANGED'); MOCK.Fire('UI_SCALE_CHANGED')
+MOCK.Fire('ADDON_LOADED','Blizzard_ActionBar')
+local events=ForeverUI.modules.actionbars.events
+events.scripts.OnEvent(events,'PLAYER_ENTERING_WORLD')
 assert(MOCK.mutations==before, 'layout and icon options cannot mutate protected frames in combat')
 MOCK.combat=false
 MOCK.Fire('PLAYER_REGEN_ENABLED')
@@ -74,9 +93,107 @@ assert(ForeverUI.db.layout.mainbar==nil)
 ForeverUI.UndoCompactLayout()
 assert(ForeverUI.db.layout.mainbar.x==120)
 ForeverUI.RestoreAll()
-assert(MainActionBar:GetWidth()==180 and ActionButton1:GetWidth()==180)
+assert(MainActionBar:GetWidth()==620 and ActionButton1:GetWidth()==42 and ActionButton1.container:GetWidth()==48)
+assert(ActionButton1.icon:GetTexCoord()==0 and ActionButton1.normal:GetAlpha()==.6)
+local font,size,flags=ActionButton1.HotKey:GetFont()
+assert(font==originalFont and size==originalSize and flags==originalFlags, 'original skin restored')
 assert(EssentialCooldownViewer:GetParent()==UIParent and UtilityCooldownViewer:GetParent()==UIParent)
 assert(MicroMenuContainer:GetScale()==1 and MinimapCluster:GetScale()==1)
+assert(MOCK.barWriteAttempts==0, 'enable, events, compact/undo and restore never touch action frame properties')
+""")
+combat = load()
+combat.execute("""
+MainActionBar.visibility='Always'
+MultiBarBottomLeft.visibility='OutOfCombat'
+MultiBarBottomRight.visibility='InCombat'
+MultiBarRight.visibility='Hidden'
+MainActionBar.driver='[petbattle] hide; show'
+MOCK.SetCombat(false)
+MOCK.LockBarWrites()
+assert(ForeverUI.ApplyProfile())
+ForeverUI.SetCooldownIcons(true)
+assert(MainActionBar:IsVisible() and ActionButton1:IsVisible())
+assert(not MultiBarRight:IsVisible(), 'native hidden choice must stay hidden')
+assert(not MultiBarBottomRight:IsVisible(), 'combat-only choice must stay hidden out of combat')
+ForeverUI.SetEdit(true)
+local before=MOCK.protectedMutations
+MOCK.SetCombat(true)
+assert(not ForeverUI.editing, 'only edit handles close at combat start')
+assert(MainActionBar:IsVisible() and ActionButton1:IsVisible(), 'main bar and its native parent chain remain visible')
+assert(not MultiBarBottomLeft:IsVisible() and MultiBarBottomRight:IsVisible())
+assert(not MultiBarRight:IsVisible())
+assert(ForeverUI.db.showCooldownIcons, 'combat must preserve cooldown viewer selection')
+MOCK.Fire('ACTIONBAR_PAGE_CHANGED'); MOCK.Fire('UI_SCALE_CHANGED')
+assert(MOCK.protectedMutations==before, 'combat entry/events cannot write secure bar geometry or show/hide')
+local point,parent,relative,x,y=ActionButton1:GetPoint(1)
+assert(point=='CENTER' and parent==UIParent, 'original anchors preserved, including client container indirection')
+assert(ForeverUI.modules.actionbars.lastCombatStatus.frames[1].visible)
+MOCK.SetCombat(false)
+assert(MainActionBar:IsVisible() and ActionButton1:IsVisible())
+assert(MultiBarBottomLeft:IsVisible() and not MultiBarBottomRight:IsVisible())
+assert(MainActionBar.driver=='[petbattle] hide; show', 'never replace the native secure visibility driver')
+assert(MainActionBar.visibility=='Always' and MultiBarBottomLeft.visibility=='OutOfCombat')
+ForeverUI.ToggleModule('actionbars',false)
+local disabledBefore=MOCK.protectedMutations
+MOCK.SetCombat(true); MOCK.SetCombat(false)
+assert(MOCK.protectedMutations==disabledBefore, 'disabled module must not reapply itself after combat')
+assert(ActionButton1:GetParent()==ActionButton1.container)
+assert(ActionButton1.container:GetWidth()==180, 'native container geometry never changes')
+MainActionBar.nativeExternallyHidden=true
+MOCK.SetCombat(true); MOCK.SetCombat(false)
+assert(not MainActionBar:IsVisible(), 'native external hiding is never overridden')
+ForeverUI.RestoreAll()
+assert(not ForeverUI.db.enabled)
+MOCK.SetCombat(true); MOCK.SetCombat(false)
+assert(not ForeverUI.modules.actionbars.active, 'off preference survives combat')
+assert(MOCK.barWriteAttempts==0)
+""")
+art = load()
+art.execute("""
+-- A same-named Frame must not be mistaken for a decorative Texture.
+MainActionBar.Background=CreateFrame('Frame',nil,MainActionBar)
+MainActionBar.Background:SetAlpha(.45)
+ActionButton1.SlotArt=ActionButton1.container
+MainActionBar.LeftEndCap=MainActionBar:CreateTexture(nil,'ARTWORK')
+MainActionBar.LeftEndCap:SetAlpha(.7)
+MainActionBar.RightEndCap=MainActionBar:CreateTexture(nil,'ARTWORK')
+MainActionBar.RightEndCap.GetObjectType=function() return MOCK.secret end
+MOCK.LockBarWrites()
+assert(ForeverUI.ApplyProfile() and ForeverUI.modules.actionbars.active)
+assert(MainActionBar.Background:GetAlpha()==.45 and ActionButton1.container:GetAlpha()==1)
+assert(MainActionBar.LeftEndCap:GetAlpha()==0 and MainActionBar.RightEndCap:GetAlpha()==1)
+MOCK.combat=true
+local before=MOCK.mutations
+MOCK.Fire('ACTIONBAR_PAGE_CHANGED'); MOCK.Fire('ADDON_LOADED','LateBar')
+assert(MOCK.mutations==before and ForeverUI.modules.actionbars.skinPending)
+MOCK.combat=false
+ForeverUI.ToggleModule('actionbars',false)
+before=MOCK.mutations
+MOCK.Fire('PLAYER_REGEN_ENABLED')
+local events=ForeverUI.modules.actionbars.events
+events.scripts.OnEvent(events,'PLAYER_ENTERING_WORLD')
+assert(MOCK.mutations==before and not ForeverUI.modules.actionbars.skinPending)
+assert(MainActionBar.LeftEndCap:GetAlpha()==.7 and MOCK.barWriteAttempts==0)
+""")
+diagnostics = load()
+diagnostics.execute("""
+assert(ForeverUI.ApplyProfile())
+ActionButton1.container:Hide()
+MainActionBar:SetAlpha(0)
+MOCK.combat=true
+local before=MOCK.mutations
+SlashCmdList.FOREVERUI('status')
+local status=ForeverUI.modules.actionbars.lastStatus
+assert(status.combat and status.frames[3].shown and not status.frames[3].visible)
+assert(status.frames[3].effectiveAlpha==0, 'diagnostics reveal inherited alpha without resetting it')
+assert(status.frames[3].parents[1].shown==false, 'diagnostics identify the hidden native container')
+assert(MOCK.mutations==before, 'status is read-only even in combat')
+MainActionBar.GetEffectiveAlpha=function() return MOCK.secret end
+MainActionBar.GetWidth=function() return MOCK.secret end
+SlashCmdList.FOREVERUI('status')
+assert(ForeverUI.modules.actionbars.lastStatus.frames[1].effectiveAlpha==nil)
+assert(ForeverUI.modules.actionbars.lastStatus.frames[1].width==nil)
+assert(MOCK.mutations==before, 'restricted diagnostic values are never coerced or mutated')
 """)
 for failure in ('failSecure', 'failDriver'):
     failed = load()
@@ -112,18 +229,19 @@ for failure in ('count', 'point', 'throw'):
 restore = load()
 restore.execute("""
 assert(ForeverUI.ApplyProfile())
-local original=MainActionBar.SetPoint
-MainActionBar.SetPoint=function() error('blocked restore') end
+local original=ActionButton1.icon.SetTexCoord
+ActionButton1.icon.SetTexCoord=function() error('blocked texture restore') end
 ForeverUI.RestoreAll()
 assert(#ForeverUI.native.actionbars==1, 'failed restore record must be retained')
-assert(ForeverUI.native.actionbars[1].points[1][1]=='CENTER')
+assert(ForeverUI.native.actionbars[1].frame==ActionButton1.icon)
+assert(ForeverUI.native.actionbars[1].coords[1]==0)
 assert(ForeverUI.modules.actionbars.restorePending, 'partial restoration must be visible')
 assert(MOCK.messages[#MOCK.messages]:find('恢复未完成',1,true))
 ForeverUI.ShowConfig(); assert(ForeverUI.config.status:GetText():find('恢复未完成',1,true))
-MainActionBar.SetPoint=original
+ActionButton1.icon.SetTexCoord=original
 ForeverUI.RestoreAll()
 assert(#ForeverUI.native.actionbars==0 and not ForeverUI.modules.actionbars.restorePending)
-assert(MainActionBar.points[1][1]=='CENTER')
+assert(ActionButton1.icon:GetTexCoord()==0)
 """)
 bags = load()
 bags.execute("""
@@ -138,5 +256,5 @@ assert(#seen==1 and seen[1]==0, 'unknown equipped count may only scan known back
 assert(module.partialScan and module.totalSlots==16)
 assert(module.summary:GetText():find('部分读取',1,true), 'partial scan must be labelled')
 """)
-print(f'PASS · Lua 5.1 parsed {len(FILES)} files; compact action grids, cooldown icon toggle and native restoration, special abilities preserved, layout undo, first-install opt-in, 48 secure unit buttons, combat guards, secret display, bag search/categories; unreadable anchors fail closed, restore retry, unknown bag count partial scan.')
+print(f'PASS · Lua 5.1 parsed {len(FILES)} files; skin-only textures/fonts applied and restored, zero native action-frame writes, combat entry/exit and native visibility/drivers, read-only diagnostics, deferred refresh cancellation, cooldown toggle, layout undo, first-install opt-in, 48 secure unit buttons, secret display, bag search/categories, restore retry.')
 print('NOT VERIFIED · real client templates, secure execution, layout, taint, combat and visual UAT.')

@@ -2,9 +2,9 @@
   <img src="assets/app-icon/forever-ai-icon.png" alt="Forever for Mac 图标" width="112">
 </p>
 
-<h1 align="center">Forever for Mac</h1>
+<h1 align="center">Forever</h1>
 <p align="center"><strong>为 macOS 定制的一站式魔兽插件助手</strong></p>
-<p align="center">插件管理 · 备份回滚 · 亡灵奥术 UI · Codex 问答 · MCP</p>
+<p align="center">插件管理 · 交互行囊 · 图鉴 · 界面方案 · 备份与恢复</p>
 <p align="center">A macOS-first, all-in-one addon companion for WoW Forever.</p>
 
 <p align="center">
@@ -16,9 +16,9 @@
 
 把插件管理、界面切换和离线开发放进一个 Mac 窗口。
 
-**Forever for Mac** 面向国服《魔兽世界：无限》玩家：接管已有插件，检查作者更新，预览每次变更，备份后应用；再把 Codex、Claude Code 或 Cursor 接进本地开发工作台。原有角色助手与图鉴也在同一个应用里。
+**Forever for Mac** 面向国服《魔兽世界：无限》玩家：接管已有插件，检查作者更新，预览每次变更，备份后应用；再把 Codex、Claude Code 或 Cursor 接进本地开发工作台。角色装备、可交互行囊、专业和任务已整合为标签页，图鉴支持分类、分页与材料跳转。
 
-> 当前为 **v0.3.0 源码预览版**。已在 Intel Mac 验证；Apple Silicon 可编译，尚未完成实机验收。只支持国服《无限》，游戏内加载与战斗保护仍需人工验收。
+> 当前为 **[v0.4.2 源码预览版](https://github.com/a13602888637-dot/forever-mac/releases/tag/v0.4.2)**。已在 Intel Mac 验证；Apple Silicon 可编译，尚未完成实机验收。只支持国服《无限》，游戏内加载与战斗保护仍需人工验收。Mac App 仍依赖源码目录，本次不提供独立安装包。
 
 ![插件管理首页，使用合成演示数据](docs/images/addon-manager.png)
 
@@ -28,12 +28,30 @@
 | --- | --- |
 | 从助手进入游戏 | **通过战网启动**，沿用战网登录态，再点击“进入游戏” |
 | 接管已有插件 | 识别 `_forever_`，按插件包组织模块，显示版本、依赖、来源与兼容信息 |
-| 检查与更新 | 从作者发布清单核对 Forever 支持；先预览目录与文件变更，再备份应用 |
+| 检查与更新 | 搜索、筛选和多选插件，汇总预览后串行应用，失败停止并恢复失败项 |
+| 按角色管理 | 明确选择存档角色后启停、检查依赖；卸载保留 SavedVariables |
 | 找回更新前的状态 | 安装历史、失败恢复与回滚，备份保留在 AddOns 外 |
 | 换一套界面 | 按角色选择 EllesmereUI / ForeverUI，分别保留配置，独立备份与恢复 |
 | 让 AI 帮写插件 | 创建或复制到离线工作区，编辑、看差异、检查 Lua、打包、生成安装计划 |
 | 直接问 Codex | 奥术问答复用本机已登录的 Codex，未保存角色快照也能先问插件与界面问题 |
-| 查看角色和资料 | 原角色助手、装备比较、专业与收益、图鉴和待办保留为辅助功能 |
+| 查看角色和资料 | 完整装备槽位；行囊搜索、分类、排序、详情和比较；图鉴分页、材料与产物跳转 |
+
+
+### v0.4 的日常管理
+
+默认打开“我的插件”。发现目录只列具体项目，图标和公开截图保留[素材来源](docs/MEDIA-SOURCES.md)；EllesmereUI 截图版本未明确时原样标注，ForeverUI 采用明确标记的布局示意。
+
+安装、启停、卸载与恢复均先展示具体变更。恢复预览绑定当前文件状态，期间发生修改时需要重新预览。下载阶段和实际字节保留在“下载与备份”，操作不依赖停留在当前页面。
+
+行囊可以按名称、分类、品质和位置筛选，点击查看数量、属性和图鉴；可穿戴候选直接比较当前槽位。比较绑定页面快照，自动同步或切换角色后不会静默比较另一物品。移动、使用和穿戴物品仍在游戏中完成。
+
+图鉴支持 `wowf` 与旧缓存。公开市场使用 `auction_house` 只读数据，必须由用户选择市场；超过24小时、来源不可靠或随机属性报价不参与当前收益计算。
+
+### 副本、地图与任务
+
+发现目录可查看 Atlas 核心和地图包、Atlas Forever、DBM 地下城首领模块、Questie、DungeonJournal。每项保留作者来源、Forever 支持依据和核对日期；添加到目录不代表已安装或完成游戏内验收。Atlas 核心、地图包和 DBM 地下城模块沿用作者发布校验与安装预览；其他项目从官网选择 Forever ZIP 后导入。
+
+图鉴可浏览副本、首领、区域地图和任务。副本页列首领顺序、入口与副本任务，任务页显示正文、目标、前后置任务与位置。仅有编号的任务保留线索，QuestieDB 补充与近似坐标单独标注。首领与副本页可查看掉落物品，物品页支持反查首领。Spyglass 的《无限》参考掉落与 QuestieDB 的经典旧世参考分别标注，未知掉率保持未知。当前资料库没有地下城内部地图和已核实的首领技能攻略；内部地图可查看发现目录中的 Atlas 类项目。公开数据缓存与角色任务进度相互独立。
 
 ### Mac 原生窗口，战网负责登录
 
@@ -55,7 +73,7 @@
 
 EllesmereUI 组合启用已装模块、停用 ForeverUI；ForeverUI 组合只停用功能重叠的 EllesmereUI 模块。正常切换仅调整选定角色的启用状态，不转换布局，不改动其他插件。
 
-配置备份与恢复是独立操作。ForeverUI 0.2.0 提供紧凑居中动作条、细边框、统一字号、下方对称单位框及更安静的聊天与地图布局。首次使用进入角色运行 `/fui`，点击“应用亡灵奥术”和“紧凑布局”。
+配置备份与恢复是独立操作。ForeverUI 0.2.2 为动作条图标与文字换肤，保留游戏原生动作条布局和显隐；其他模块提供下方对称单位框及更安静的聊天与地图布局。首次使用进入角色运行 `/fui`，点击“应用亡灵奥术”；“紧凑布局”只调整其他模块，动作条位置使用游戏原生编辑模式。
 
 动作条外的悬浮技能冷却默认隐藏，可用 `/fui icons on` 显示、`/fui icons off` 隐藏；任务特殊技能按钮保留。新布局保留上一套位置，可用 `/fui layout undo` 找回。界面组合还可选择保留 EllesmereUI DPS 统计，并停用 Details! 及附属模块，配置不会删除。
 
@@ -73,9 +91,9 @@ EllesmereUI 组合启用已装模块、停用 ForeverUI；ForeverUI 组合只停
 
 ![离线插件编辑器，使用合成项目](docs/images/workshop.png)
 
-## 奥术问答接入本机 Codex
+## 问答接入本机 Codex
 
-本机安装并登录 Codex CLI 后，Mac 应用的“奥术问答”可以直接调用现有登录。没有角色快照时可先问插件、界面和操作步骤；角色装备与进度仍以游戏保存的快照为准。
+本机安装并登录 Codex CLI 后，Mac 应用的“问答”可以直接调用现有登录。没有角色快照时可先问插件、界面和操作步骤；角色装备与进度仍以游戏保存的快照为准。
 
 默认 `FAI_AI_PROVIDER=auto`：优先使用已有 OpenAI API 配置，否则使用已登录的本机 Codex。可选值为 `auto` / `codex` / `openai` / `rules`。本次验证使用 Codex CLI 0.166.0。
 
@@ -92,6 +110,8 @@ uv sync --extra dev
 uv run python scripts/build_macos_app.py
 open "Forever AI Companion.app"
 ```
+
+再次构建时，脚本先完成新 App 的编译与签名验证，再将本项目内的旧 App 归档到 `delete/<时间批次>/` 并替换入口，归档清单保留旧版本位置。正在运行的 App 不移动；构建失败保留旧入口。版本号读取 `pyproject.toml`。
 
 也可以直接打开本地网页入口：
 
@@ -119,7 +139,7 @@ uv run foreverai mcp-serve --mode live
 | 目录 | 内容 |
 | --- | --- |
 | `backend/` | 插件管理、事务、界面组合、工作台、MCP 与原助手服务 |
-| `frontend/` | 插件管理与亡灵奥术界面 |
+| `frontend/` | 桌面管理、角色、行囊和图鉴页面 |
 | `native/macos/` | AppKit / WKWebView 客户端 |
 | `addons/` | ForeverAI 只读采集与独立 ForeverUI |
 | `tests/` | 隔离客户端与接口回归 |

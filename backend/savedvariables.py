@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from pathlib import Path
 
 from .models import Snapshot
@@ -186,8 +187,51 @@ def read_snapshot(path: Path, expected_name: str, expected_realm: str) -> Snapsh
         snapshot = parse_savedvariables(raw.decode("utf-8-sig"))
     except UnicodeError as exc:
         raise ImportError("存档必须为 UTF-8") from exc
-    def normalize(s):
-        return "".join(s.casefold().split())
-    if normalize(snapshot.character.name) != normalize(expected_name) or normalize(snapshot.character.realm) != normalize(expected_realm):
+    return bind_storage_identity(snapshot, path, expected_name, expected_realm)
+
+
+def bind_storage_identity(snapshot: Snapshot, path: Path, expected_name: str, expected_realm: str) -> Snapshot:
+    def normalize(value):
+        return "".join(unicodedata.normalize("NFC", value).casefold().split())
+    def full_name(value):
+        return " ".join(unicodedata.normalize("NFC", value).replace("-", " ").casefold().split())
+
+    # Storage identity is always derived from the allowlisted file location;
+    # never trust a similarly named field inside an exported JSON payload.
+    character = snapshot.character.model_copy(update={"storage_name": None, "storage_realm_id": None})
+    # Released Forever stores numeric realm folders and Firstname-Surname
+    # character folders, while UnitName may report the first name alone.
+    first, separator, surname = expected_name.partition("-")
+    forever_layout = (snapshot.client.interface == 16001 and (snapshot.client.version or "").startswith("1.60.")
+                      and expected_realm.isascii() and expected_realm.isdecimal() and int(expected_realm) > 0
+                      and separator and first and surname
+                      and path.parent.name == "SavedVariables"
+                      and path.parent.parent.name == expected_name and path.parent.parent.parent.name == expected_realm)
+    if not forever_layout:
+        if normalize(character.name) == normalize(expected_name) and normalize(character.realm) == normalize(expected_realm):
+            return snapshot.model_copy(update={"character": character})
         raise ImportError("快照角色身份与存档目录不一致")
-    return snapshot
+    if character.realm.isascii() and character.realm.isdecimal() and int(character.realm) != int(expected_realm):
+        raise ImportError("快照服务器编号与存档目录不一致")
+    if full_name(character.name) != full_name(expected_name):
+        if normalize(character.name) != normalize(first):
+            raise ImportError("快照角色身份与存档目录不一致")
+        # Legacy exports omit the surname. Accept only an unambiguous first
+        # name within this account's fixed realm/character directory depth.
+        account = path.parents[3]
+        matching = []
+        for index, candidate in enumerate(account.glob("*/*")):
+            if index >= 5000:
+                raise ImportError("角色目录过多，无法安全确认旧版名字，请导出完整姓名")
+            if not candidate.is_dir() or candidate.is_symlink() or candidate.parent.is_symlink():
+                continue
+            candidate_first, sep, candidate_last = candidate.name.partition("-")
+            if sep and candidate_last and normalize(candidate_first) == normalize(first):
+                matching.append(candidate.resolve())
+                if len(matching) > 1:
+                    raise ImportError("存档只包含名字，但存在同名不同姓角色；请导出完整姓名后再连接")
+        if matching != [path.parent.parent.resolve()]:
+            raise ImportError("无法唯一确认角色存档，请重新发现来源")
+    character = type(character).model_validate({**character.model_dump(),
+        "storage_name": unicodedata.normalize("NFC", expected_name), "storage_realm_id": int(expected_realm)})
+    return snapshot.model_copy(update={"character": character})

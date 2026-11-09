@@ -106,9 +106,12 @@ class Automation:
                     self.market_attempt = now
                     try:
                         market = await self.service.market.sync()
-                        self.state["last_market_sync"] = int(time.time())
                         self.state["errors"].pop("market", None)
-                        self.service.db.automation_event(mode, "market", "ok", f"自动归档 {market['count']} 条公开参考报价；市场范围保留在记录中。")
+                        if market.get("status") == "selection_required":
+                            self.service.db.automation_event(mode, "market", "waiting", "等待选择公开参考市场。")
+                        else:
+                            self.state["last_market_sync"] = int(time.time())
+                            self.service.db.automation_event(mode, "market", "ok", f"自动归档 {market['count']} 条公开参考报价；市场范围保留在记录中。")
                     except (ValueError, OSError):
                         self.error("market", "公开报价暂时无法同步；保留历史，不生成替代价格。")
                 if cache and not self.state["last_reference_sync"]:

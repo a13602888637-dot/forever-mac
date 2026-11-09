@@ -18,7 +18,7 @@ from .paths import default_roots, game_flavors
 from .platform_io import (MAX_UPLOAD, digest_file, folded, game_running, identifier, inside, manifest,
                           operation_lock, read_json, require_game_closed, write_json)
 from .platform_transactions import Transactions, fingerprint
-from .platform_tasks import tracked, task_receipts
+from .platform_tasks import tracked, task_receipts, task_progress
 
 BATTLE_NET_APPS = (Path("/Applications/Battle.net.app"), Path.home() / "Applications/Battle.net.app")
 
@@ -184,9 +184,13 @@ class AddonPlatform:
             # grant unattended updates or write anything to the game directory.
             state = self.tx.state()
             old = state["installs"].get(key, {})
+            names = [m["directory"] for m in group["modules"]]
+            for owner, record in state["installs"].items():
+                if owner != key and set(names).intersection(record.get("files", {})):
+                    raise ValueError("所选包存在共享目录，不能确认归属")
             state["installs"][key] = {"version": group["version"], "source": group["source"],
                 "files": {m["directory"]: manifest(self.game() / "Interface/AddOns" / m["directory"]) for m in group["modules"]},
-                "owned": old.get("owned", []), "adopted_at": time.time()}
+                "owned": sorted(set(old.get("owned", [])) | set(names)), "adopted_at": time.time()}
             self.tx.save_state(state)
             return {"package_id": key, "status": "adopted", "note": "已记录当前文件基线；后续变化将暂停覆盖"}
 
@@ -220,10 +224,14 @@ class AddonPlatform:
     @tracked("准备作者发布包")
     def download(self, key: str):
         identifier(key)
+        task_progress("checking_release", package_id=key)
         release = author_release(key)
         archive = self.root / "uploads" / (uuid.uuid4().hex + ".zip")
         try:
-            fetch(release["url"], MAX_UPLOAD, archive)
+            task_progress("downloading", bytes_total=release["size"])
+            fetch(release["url"], MAX_UPLOAD, archive,
+                  progress=lambda count: task_progress("downloading", bytes_received=count))
+            task_progress("validating", bytes_received=archive.stat().st_size)
             if archive.stat().st_size != release["size"]:
                 raise ValueError("下载长度与作者发布资产不一致")
             if release.get("sha256") and digest_file(archive) != release["sha256"]:
@@ -247,9 +255,11 @@ class AddonPlatform:
         finally:
             archive.unlink(missing_ok=True)
 
+    @tracked("校验插件文件")
     def stage(self, archive: Path, package_id: str | None = None, provenance: dict | None = None,
               source_url: str = "", forever_confirmed: bool = False, original_filename: str | None = None):
         with self.lock():
+            task_progress("validating")
             game = self.game()
             op = uuid.uuid4().hex
             stage = self.root / "staging" / op
@@ -313,6 +323,7 @@ class AddonPlatform:
                     "changes": changes, "static_blockers": list(dict.fromkeys(blockers)),
                     "record_before": record or None, "version": provenance.get("version") or (toc[0]["version"] if len(toc) == 1 else None)}
             write_json(self.root / "plans" / (op + ".json"), plan)
+            task_progress("awaiting_confirmation", plan_id=op, plan_kind="addons")
             return self.review(op)
 
     def load_plan(self, op):
@@ -325,6 +336,8 @@ class AddonPlatform:
     def review(self, op):
         plan = self.load_plan(op)
         blockers = list(plan["static_blockers"])
+        if time.time() - plan["created_at"] > 86400:
+            blockers.append("计划已过期，请重新准备文件并查看变更")
         game, state = self.game(), self.tx.state()
         if str(game) != plan["game"]:
             blockers.append("客户端选择已变化，请重新生成计划")
@@ -376,21 +389,27 @@ class AddonPlatform:
         return {**plan, "blockers": list(dict.fromkeys(blockers)), "missing_dependencies": missing,
                 "can_apply": not blockers and plan["status"] == "prepared", "game_running": running}
 
+    @tracked("应用插件变更")
     def apply(self, op):
         with self.lock():
-            plan = self.review(op)
-            if not plan["can_apply"]:
-                raise ValueError("；".join(plan["blockers"]) or "计划已应用")
-            require_game_closed(self.root)
-            state = self.tx.state()
-            state["installs"][plan["package_id"]] = {"version": plan["version"], "source": plan["provenance"],
-                "files": plan["files"], "owned": list(plan["directories"]), "installed_at": time.time()}
-            changes = [("Interface/AddOns/" + c["directory"], inside(self.root, plan["directories"][c["directory"]]) if c["action"] != "remove" else None) for c in plan["changes"]]
-            journal = self.tx.execute(self.game(), "addons:" + plan["package_id"], changes, state)
-            saved = self.load_plan(op)
-            saved.update(status="applied", operation_id=journal["id"])
-            write_json(self.root / "plans" / (op + ".json"), saved)
-            return {"id": journal["id"], "status": journal["status"], "plan_id": op}
+            return self.apply_locked(op)
+
+    def apply_locked(self, op):
+        """Shared implementation; caller must hold the platform operation lock."""
+        plan = self.review(op)
+        if not plan["can_apply"]:
+            raise ValueError("；".join(plan["blockers"]) or "计划已应用")
+        require_game_closed(self.root)
+        task_progress("applying", package_id=plan["package_id"])
+        state = self.tx.state()
+        state["installs"][plan["package_id"]] = {"version": plan["version"], "source": plan["provenance"],
+            "files": plan["files"], "owned": list(plan["directories"]), "installed_at": time.time()}
+        changes = [("Interface/AddOns/" + c["directory"], inside(self.root, plan["directories"][c["directory"]]) if c["action"] != "remove" else None) for c in plan["changes"]]
+        journal = self.tx.execute(self.game(), "addons:" + plan["package_id"], changes, state, context={"plan_id": op})
+        saved = self.load_plan(op)
+        saved.update(status="applied", operation_id=journal["id"])
+        write_json(self.root / "plans" / (op + ".json"), saved)
+        return {"id": journal["id"], "status": journal["status"], "plan_id": op}
 
     def history(self):
         # Hide file hashes and account path details from the overview.

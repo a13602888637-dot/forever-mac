@@ -1,6 +1,6 @@
 [project]
 name = "forever-ai-companion"
-version = "0.3.0"
+version = "0.4.2"
 description = "魔兽世界：无限 · Intel Mac 插件管理与离线开发工作台"
 requires-python = ">=3.12,<3.13"
 dependencies = [

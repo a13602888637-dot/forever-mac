@@ -57,11 +57,13 @@ def export_catalog(db: Database, destination: Path):
     if len({(r["build"], r["built_at"]) for r in rows.values()}) != 1:
         raise ValueError("资料版本不一致，保留旧插件资料库")
     manifest, items, recipes = (json.loads(rows[key]["payload"]) for key in ("manifest", "items", "recipes"))
-    if manifest.get("product") != "wow_cn_beta" or not isinstance(items, dict) or not isinstance(recipes, list):
+    if manifest.get("product") not in {"wowf", "wow_cn_beta"} or not isinstance(items, dict) or not isinstance(recipes, list):
         raise ValueError("不是已识别的《无限》国服资料结构")
     declared = manifest.get("counts", {})
+    if not isinstance(declared, dict):
+        raise ValueError("资料数量声明无效，保留旧插件资料库")
     for key, values in (("items", items), ("recipes", recipes)):
-        if key in declared and declared[key] != len(values):
+        if key in declared and (type(declared[key]) is not int or declared[key] != len(values)):
             raise ValueError("资料数量与来源声明不符，保留旧插件资料库")
     item_table, recipe_table = {}, {}
     for key, item in items.items():

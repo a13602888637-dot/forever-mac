@@ -50,6 +50,8 @@ JSON 包含：`schema_version`、`addon_version`、`captured_at`（UNIX 秒）�
 
 游戏存档只能导入 `data_mode=live`；Mock 固定走项目的合成 fixture 初始化入口。快照时间晚于本机五分钟、身份与目录不符、重复 JSON 键、未知字段、数值类型错误均拒绝导入。
 
+无限 `1.60.x / Interface 16001` 支持 `Account/<账号>/<数字服务器ID>/<名-姓>/SavedVariables/ForeverAI.lua`。桌面从已发现的存档目录补充 `character.storage_name` 和 `character.storage_realm_id`，以二者作为稳定角色标识；不改写游戏报告的 `name/realm`，不信任 JSON 自带的存储标识。完整姓名须匹配；旧快照仅含名时，必须在账号内唯一，跨服同名也拒绝自动归并。传统目录仍校验名字与服务器。两个存储字段在旧快照中可缺省，不要求游戏 API 的 unavailable 原因，且与角色名、服务器一起从 AI 上下文剔除。
+
 ## 计算
 
 所有金额以整数铜币存储。材料成本为 `材料数量 × 单价 × 批次`；销售收入为 `固定产量 × 批次 × 成品单价`。缺价或产量未知则对应结果为 null。已知费率时使用 Decimal 四舍五入至铜进行估算；未核实费率时净利润保持 null，仅计算未扣费用毛差和盈亏平衡费率。
@@ -99,3 +101,37 @@ JSON 包含：`schema_version`、`addon_version`、`captured_at`（UNIX 秒）�
 - `POST /api/ai/ask` 保留 `{question}` 输入，Codex 登录可用时通过只读 CLI 返回结构化建议。没有角色快照时允许先问通用插件问题，不创建虚假角色快照。
 - `POST /api/profiles/plans` 可传 `keep_ellesmere_dps: true`。计划启用 EllesmereUIDamageMeters，并停用已核验 Details 包的所有模块，配置文件保留。新增模块或文件变化后仍会阻断陈旧计划。
 - ForeverUI 组合会停用重叠的 EllesmereUICooldownManager；实际游戏内主题仍由 `/fui` 面板启用。
+
+
+## 0.4 桌面与管理接口
+
+旧页面地址与原16项 MCP 契约保留。新增页面 `/discover`、`/addons/{package_id}`、`/downloads`、`/addons/management/{id}`、`/profiles/plans/{id}`，角色标签使用 `/overview?tab=overview|equipment|bags|professions|quests`。
+
+| 方法 | 路径 | 输入 / 作用 |
+| --- | --- | --- |
+| GET | `/api/catalog` | `q`、`category`，仅具体项目，返回作者、版本、图标、截图和来源 |
+| GET | `/api/catalog/{package_id}` | 项目详情与已安装状态 |
+| GET | `/api/media/{resource_id}` | 已登记同源资源；`size=thumb|full`，不接受任意URL |
+| GET | `/api/addons/enablement` | `character_id`为存档位置ID，未提供时明确返回unknown |
+| POST | `/api/addons/management/plans` | `{action,package_ids,character_id?}`；action为update/enable/disable/uninstall |
+| GET / POST | `/api/addons/management/plans/{id}` / `.../apply` | 汇总预览与一次确认；失败停止剩余包 |
+| GET | `/api/addons/operations/{id}/rollback-preview` | 当前文件到备份文件的具体影响、依赖阻止原因与precondition_token |
+| POST | `/api/addons/operations/{id}/rollback` | 可选 `{precondition_token}`；新UI必须发送预览令牌 |
+| GET | `/api/profiles/snapshots/{id}/restore-preview` | `character_id`，账号/角色配置的具体文件影响 |
+| POST | `/api/profiles/snapshots/{id}/restore` | `{character_id,precondition_token?}`，提交时重算预览条件 |
+| POST | `/api/profiles/plans/{old_id}/restore-plan` | 从已应用方案和成功事务证据生成新预览；不写游戏 |
+| GET | `/api/references/browse` | kind/q/category/page/page_size，返回分类、分页与结构化记录 |
+| GET | `/api/references/details/{kind}/{id}` | 属性、材料、配方，或副本、首领、地图、任务详情与关联 |
+| GET | `/api/market/markets` | 可用市场、selected_house、采集状态；refresh可刷新清单 |
+| POST | `/api/market/selection` | `{house}`；null关闭公开参考市场，不删除历史 |
+| POST | `/api/market/refresh` | 对明确选择的市场完整分页同步，失败保留旧缓存 |
+
+`ComparisonInput`新增可选`expected_snapshot_id`，保留旧调用兼容。桌面行囊和装备比较必须传页面快照ID；角色或快照变化返回400并要求刷新，不静默使用旧索引。
+
+恢复令牌是内容条件哈希，不是认证凭据。提交期间再次检查游戏进程、文件、管理记录、依赖以及相关事务；重复消费或预览过期拒绝应用。
+
+### 0.4.2 世界资料与首领掉落
+
+`/api/references/browse` 和详情接口的 `kind` 支持 `items`、`recipes`、`instances`、`bosses`、`maps`、`quests`。副本与首领详情提供 `loot_groups`，物品详情提供 `dropped_by`。掉落记录始终标记为第三方参考，区分 Spyglass《无限》与 QuestieDB 经典旧世来源；物品属性仍来自当前物品缓存。`cached=false` 表示尚未同步，已同步的空列表表示来源未收录。
+
+`POST /api/references/sync` 同步基础资料与首领详情补充，返回 `world_counts` 和 `loot` 覆盖统计。首领详情限制并发和速率，并以目录的 NPC、首领战及副本编号核对；最终版本核对通过后整体提交缓存。新同步可能需要一至数分钟；失败保留上次完整缓存。公开 MCP 只读白名单另外支持 `instances`、`npcs`、`quests`、`atlas`。

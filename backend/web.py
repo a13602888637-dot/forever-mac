@@ -16,6 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import Field, StrictBool, StrictInt, ValidationError
 
+from . import __version__
 from .config import Settings
 from .automation import Automation, OFFICIAL_PROVIDER
 from .models import Item, Model, PositiveID, Recipe
@@ -25,7 +26,14 @@ from .addon_platform import AddonPlatform
 from .addon_profiles import Profiles
 from .addon_workshop import Workshop
 from .platform_routes import router as platform_router, mcp_configuration
-from .platform_io import MAX_UPLOAD
+from .platform_io import MAX_UPLOAD, identifier, read_json, require_game_closed
+from .addon_management import AddonManagement
+from .addon_catalog import Catalog
+from .media import MediaCache
+from .media_routes import router as media_router
+from .reference_routes import router as reference_router, attach_media
+from .desktop import character_view, selected_profile, SLOTS
+from .platform_transactions import fingerprint
 
 
 class SourceInput(Model):
@@ -150,6 +158,9 @@ def create_app(settings: Settings | None = None):
     automation = Automation(service)
     platform = AddonPlatform(settings, lambda: service.game_path)
     profiles, workshop = Profiles(platform), Workshop(platform)
+    management = AddonManagement(platform, profiles)
+    media = MediaCache(settings.data_dir / "media")
+    catalog = Catalog(platform, media)
 
     @asynccontextmanager
     async def lifespan(app):
@@ -174,13 +185,14 @@ def create_app(settings: Settings | None = None):
                 with suppress(asyncio.CancelledError):
                     await updater
 
-    app = FastAPI(title="Forever AI Companion", version="0.3.0", docs_url="/api/docs", redoc_url=None, lifespan=lifespan)
+    app = FastAPI(title="Forever", version=__version__, docs_url="/api/docs", redoc_url=None, lifespan=lifespan)
     app.add_middleware(LocalOnly)
     app.state.service = service
     app.state.automation = automation
     app.state.platform = platform
     app.state.profiles = profiles
     app.state.workshop = workshop
+    app.state.catalog, app.state.media, app.state.management = catalog, media, management
     app.state.reference_lock = asyncio.Lock()
     templates = Jinja2Templates(directory=str(ROOT / "frontend/templates"))
     templates.env.filters["money"] = money
@@ -188,6 +200,8 @@ def create_app(settings: Settings | None = None):
     templates.env.filters["prettyjson"] = lambda v: json.dumps(v, ensure_ascii=False, indent=2, default=str)
     app.mount("/static", StaticFiles(directory=str(ROOT / "frontend/static"), check_dir=False), name="static")
     app.include_router(platform_router(platform, profiles, workshop))
+    app.include_router(media_router(catalog, media))
+    app.include_router(reference_router(service, media))
 
     @app.middleware("http")
     async def security_headers(request, call_next):
@@ -202,7 +216,7 @@ def create_app(settings: Settings | None = None):
         latest = service.latest()
         snapshot_id, snapshot = latest if latest else (None, None)
         ai_status = service.advisor.status()
-        context = {"request": request, "current": "", "mode": settings.mode, "snapshot": snapshot,
+        context = {"request": request, "current": "", "mode": settings.mode, "snapshot": snapshot, "app_version": __version__,
                    "snapshot_id": snapshot_id, "characters": service.db.characters(settings.mode),
                    "active_character": snapshot.character.identity if snapshot else "",
                    "api_ready": ai_status["ready"], "model": ai_status["label"], "ai_status": ai_status,
@@ -229,7 +243,7 @@ def create_app(settings: Settings | None = None):
     def health():
         return {"status": "ok", "mode": settings.mode, "model": settings.model,
                 "api_key_configured": bool(settings.api_key), "bind": "127.0.0.1", "schema_version": 1,
-                "application": "forever-ai-companion", "platform_schema": 1,
+                "application": "forever-ai-companion", "platform_schema": 1, "version": __version__,
                 "project_id": hashlib.sha256(str(ROOT).encode()).hexdigest()[:16]}
 
     @app.get("/api/ai/status")
@@ -361,21 +375,85 @@ def create_app(settings: Settings | None = None):
         return await service.refs.mcp(body.tool, body.arguments)
 
     @app.get("/overview", response_class=HTMLResponse)
-    def overview(request: Request):
-        return render(request, "overview.html", current="overview")
+    def overview(request: Request, tab: str = "overview"):
+        latest = service.latest()
+        snapshot = latest[1] if latest else None
+        if tab not in ("overview", "equipment", "bags", "professions", "quests"):
+            tab = "overview"
+        return render(request, "overview.html", current="overview", tab=tab,
+                      **character_view(snapshot, service.refs, media))
 
     @app.get("/", response_class=HTMLResponse)
     def addons_page(request: Request, category: str = "全部"):
-        return render(request, "addons.html", current="addons", inventory=platform.inventory(),
-                      plans=platform.plans(), history=platform.history(), category=category)
+        character_list = profiles.overview()["characters"]
+        latest = service.latest()
+        return render(request, "addons.html", current="addons", inventory=catalog.inventory(),
+                      profile_characters=character_list,
+                      selected_profile=selected_profile(character_list, latest[1] if latest else None))
+
+    @app.get("/discover", response_class=HTMLResponse)
+    def discover_page(request: Request, q: str = "", category: str = "全部"):
+        result = catalog.browse(q, category)
+        return render(request, "discover.html", current="discover", catalog_items=result["items"],
+                      categories=["全部", *result["categories"]], category=category, query=q[:150])
+
+    @app.get("/addons/management/{op}", response_class=HTMLResponse)
+    def management_page(request: Request, op: str):
+        return render(request, "management_plan.html", current="addons", plan=management.review(op))
+
+    @app.get("/addons/{package_id}", response_class=HTMLResponse)
+    def addon_detail_page(request: Request, package_id: str):
+        return render(request, "addon_detail.html", current="addons", addon=catalog.detail(package_id))
+
+    @app.get("/downloads", response_class=HTMLResponse)
+    def downloads_page(request: Request):
+        profile_plans = [{**read_json(path), "kind": "profile"} for path in (profiles.root / "profile-plans").glob("*.json")]
+        plans = sorted(platform.plans() + management.plans() + profile_plans, key=lambda p: p["created_at"], reverse=True)
+        return render(request, "downloads.html", current="downloads",
+                      pending_plans=[p for p in plans if p["status"] not in ("applied", "completed")],
+                      history=platform.history())
 
     @app.get("/addons/plans/{op}", response_class=HTMLResponse)
     def addon_plan_page(request: Request, op: str):
-        return render(request, "addon_plan.html", current="addons", plan=platform.review(op))
+        plan = platform.review(op)
+        directories = {m["directory"] for m in plan["toc"]}
+        dependencies = sorted({dep for m in plan["toc"] for dep in m["dependencies"]
+                               if dep not in directories and not dep.startswith("Blizzard_")})
+        before_version = (plan.get("record_before") or {}).get("version")
+        if not before_version:
+            before_version = "原版本未记录" if any(c["before"] for c in plan["changes"]) else "未安装"
+        return render(request, "addon_plan.html", current="addons", plan=plan,
+                      before_version=before_version, dependencies=dependencies)
 
     @app.get("/profiles", response_class=HTMLResponse)
     def profiles_page(request: Request):
-        return render(request, "profiles.html", current="profiles", profiles=profiles.overview())
+        overview = profiles.overview()
+        latest = service.latest()
+        return render(request, "profiles.html", current="profiles", profiles=overview,
+                      selected_profile=selected_profile(overview["characters"], latest[1] if latest else None),
+                      profile_media={name: catalog.profile_media(name) for name in ("EllesmereUI", "ForeverUI")})
+
+    @app.get("/profiles/plans/{op}", response_class=HTMLResponse)
+    def profile_plan_page(request: Request, op: str):
+        plan = read_json(profiles.root / "profile-plans" / (identifier(op) + ".json"))
+        if not plan:
+            raise ValueError("界面方案预览不存在")
+        target = next((c for c in profiles.characters() if c["id"] == plan["character_id"]), None)
+        blockers = list(plan.get("blockers", []))
+        if not plan.get("updates"):
+            blockers.append("当前状态与目标一致，无需应用")
+        try:
+            require_game_closed(platform.root)
+        except ValueError as exc:
+            blockers.append(str(exc))
+        if plan["status"] != "prepared":
+            blockers.append("这份预览已应用或失效")
+        if time.time() - plan["created_at"] > 86400:
+            blockers.append("预览已过期，请重新准备")
+        if target and fingerprint(profiles.character_path(plan["character_id"])) != plan["before"]:
+            blockers.append("角色启用状态已变化，请重新准备预览，保留最新选择")
+        return render(request, "profile_plan.html", current="profiles", plan=plan,
+                      target_character=target, blockers=blockers)
 
     @app.get("/workshop", response_class=HTMLResponse)
     def workshop_page(request: Request, project: str | None = None):
@@ -396,13 +474,14 @@ def create_app(settings: Settings | None = None):
         return render(request, "growth.html", current="growth", advice=advice, engine=engine)
 
     @app.get("/equipment", response_class=HTMLResponse)
-    def equipment(request: Request, candidate_id: int | None = None):
+    def equipment(request: Request, candidate_id: int | None = None, bag_index: int | None = None):
         latest = service.latest()
         snap = latest[1] if latest else None
         return render(request, "equipment.html", current="equipment",
                       equipped=[i.model_dump() for i in snap.equipment or [] if i.item_id and i.status == "available"] if snap else [],
                       bag_items=[{"index": index, **item.model_dump()} for index, item in enumerate(snap.bags or [])] if snap else [],
-                      candidate_prefill=candidate_id, auto_comparisons=service.auto_comparisons(),
+                      candidate_prefill=candidate_id, bag_prefill=bag_index, slot_names=SLOTS,
+                      auto_comparisons=service.auto_comparisons(),
                       auto_equipment_note="自动按已知槽位匹配背包候选，按智力增量排序；这是属性比较，不是 DPS 模拟。")
 
     @app.get("/economy", response_class=HTMLResponse)
@@ -424,12 +503,22 @@ def create_app(settings: Settings | None = None):
         return render(request, "tasks.html", current="tasks", **(service.task_context() if service.latest() else {"tasks": []}))
 
     @app.get("/references", response_class=HTMLResponse)
-    def refs_page(request: Request):
-        return render(request, "references.html", current="references", reference_status=service.db.reference_status(), results=[])
+    def refs_page(request: Request, kind: str = "items", q: str = "", category: str = "", page: int = 1):
+        latest = service.latest()
+        result = attach_media(service.refs.browse(q, kind, latest[1] if latest else None, category, page, 24), media)
+        return render(request, "references.html", current="references", reference_status=service.db.reference_status(), browse=result)
+
+    @app.get("/references/{kind}/{entity_id}", response_class=HTMLResponse)
+    def reference_detail_page(request: Request, kind: str, entity_id: int):
+        latest = service.latest()
+        result = attach_media(service.refs.detail(kind, entity_id, latest[1] if latest else None), media)
+        template = "reference_world_detail.html" if kind in ("instances", "bosses", "maps", "quests") else "reference_detail.html"
+        return render(request, template, current="references", detail=result, kind=kind)
 
     @app.get("/settings", response_class=HTMLResponse)
     def settings_page(request: Request):
-        return render(request, "settings.html", current="settings", game_path=service.game_path or "", sources=service.sources(), reference_status=service.db.reference_status())
+        return render(request, "settings.html", current="settings", game_path=service.game_path or "", sources=service.sources(),
+                      reference_status=service.db.reference_status(), market_selection=service.market.markets())
 
     @app.post("/ui/plan")
     async def ui_plan(request: Request):
@@ -463,7 +552,8 @@ def create_app(settings: Settings | None = None):
         body = ComparisonInput(slot=int(form.get("slot") or ""), candidate_kind=kind,
                                bag_index=int(form["bag_index"]) if kind == "bag" and form.get("bag_index") else None,
                                reference_item_id=int(form["reference_item_id"]) if kind == "reference" and form.get("reference_item_id") else None,
-                               manual_item=manual, weights=json.loads(form["weights"]) if form.get("weights") else None)
+                               manual_item=manual, weights=json.loads(form["weights"]) if form.get("weights") else None,
+                               expected_snapshot_id=form.get("expected_snapshot_id") or None)
         return render(request, "partials/comparison.html", result=service.compare(body))
 
     @app.post("/ui/prices")

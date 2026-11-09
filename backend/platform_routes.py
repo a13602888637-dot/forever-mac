@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from pathlib import Path
 import sys
+from typing import Literal
 import uuid
 
 from fastapi import APIRouter, File, Form, UploadFile
@@ -21,6 +22,12 @@ class UpdateInput(Model):
     package_id: str | None = Field(default=None, max_length=100)
 
 
+class ManagementInput(Model):
+    action: Literal["update", "enable", "disable", "uninstall"]
+    package_ids: list[str] = Field(min_length=1, max_length=100)
+    character_id: str | None = Field(default=None, max_length=100)
+
+
 class BundleInput(Model):
     name: str = Field(pattern="^(ForeverAI|ForeverUI)$")
 
@@ -33,6 +40,11 @@ class ProfileInput(Model):
 
 class RestoreInput(Model):
     character_id: str = Field(min_length=1, max_length=100)
+    precondition_token: str | None = Field(default=None, pattern="^[a-f0-9]{64}$")
+
+
+class RestoreCondition(Model):
+    precondition_token: str = Field(pattern="^[a-f0-9]{64}$")
 
 
 class ProjectInput(Model):
@@ -59,7 +71,29 @@ def mcp_configuration(platform):
 
 
 def router(platform, profiles, workshop):
+    from .addon_management import AddonManagement
     api = APIRouter()
+    management = AddonManagement(platform, profiles)
+
+    @api.get("/api/addons/enablement")
+    def enablement(character_id: str | None = None):
+        return management.enablement(character_id)
+
+    @api.post("/api/addons/management/plans")
+    def prepare_management(body: ManagementInput):
+        return management.prepare(body.action, body.package_ids, body.character_id)
+
+    @api.get("/api/addons/management/plans")
+    def management_plans():
+        return management.plans()
+
+    @api.get("/api/addons/management/plans/{op}")
+    def management_plan(op: str):
+        return management.review(op)
+
+    @api.post("/api/addons/management/plans/{op}/apply")
+    def apply_management(op: str):
+        return management.apply(op)
 
     @api.get("/api/addons")
     def inventory():
@@ -129,9 +163,18 @@ def router(platform, profiles, workshop):
     def tasks():
         return platform.tasks()
 
+    @api.get("/api/addons/operations/{op}/rollback-preview")
+    def rollback_preview(op: str):
+        if platform.tx.get(op)["game"] != str(platform.game()):
+            raise ValueError("此操作属于其他客户端，请先切回相应客户端")
+        return platform.tx.rollback_preview(op)
+
     @api.post("/api/addons/operations/{op}/rollback")
-    def rollback(op: str):
-        result = platform.rollback(op)
+    def rollback(op: str, body: RestoreCondition | None = None):
+        with platform.lock():
+            if platform.tx.get(op)["game"] != str(platform.game()):
+                raise ValueError("此操作属于其他客户端，请先切回相应客户端")
+            result = platform.tx.rollback(op, body.precondition_token if body else None)
         return {"id": result["id"], "status": result["status"]}
 
     @api.post("/api/addons/operations/{op}/recover")
@@ -159,13 +202,21 @@ def router(platform, profiles, workshop):
     def apply_switch(op: str):
         return profiles.apply_switch(op)
 
+    @api.post("/api/profiles/plans/{op}/restore-plan")
+    def restore_switch_plan(op: str):
+        return profiles.prepare_restore_switch(op)
+
     @api.post("/api/profiles/snapshots")
     def backup(body: ProfileInput):
         return profiles.backup_config(body.character_id, body.combo)
 
     @api.post("/api/profiles/snapshots/{op}/restore")
     def restore(op: str, body: RestoreInput):
-        return profiles.restore_config(op, body.character_id)
+        return profiles.restore_config(op, body.character_id, body.precondition_token)
+
+    @api.get("/api/profiles/snapshots/{op}/restore-preview")
+    def restore_preview(op: str, character_id: str):
+        return profiles.restore_preview(op, character_id)
 
     @api.get("/api/workshop/mcp-config")
     def mcp_config():

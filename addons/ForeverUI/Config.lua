@@ -56,7 +56,7 @@ function F.ShowConfig()
             panel.rows[id] = row
         end
         local footnote = F.Font(panel, 10, F.colors.muted); footnote:SetPoint("TOPLEFT", 28, -437); footnote:SetWidth(580)
-        footnote:SetText("布局按角色保存。拖动编辑标签调整位置；战斗中暂停所有布局与模块设置。")
+        footnote:SetText("动作条位置由游戏原生编辑模式管理；其他模块可拖动标签。战斗中暂停布局与模块设置。")
         panel.cooldownCheck = CreateFrame("CheckButton", nil, panel, "UICheckButtonTemplate")
         panel.cooldownCheck:SetSize(24, 24); panel.cooldownCheck:SetPoint("TOPLEFT", 27, -465)
         panel.cooldownCheck:SetScript("OnClick", function(self) F.SetCooldownIcons(self:GetChecked()) end)

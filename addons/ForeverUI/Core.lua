@@ -1,6 +1,6 @@
 -- ForeverUI · Undead Arcane. All code is local; no remote execution or gameplay automation.
 local ADDON = ...
-local F = { version = "0.2.0", modules = {}, order = {}, movers = {}, native = {}, editing = false }
+local F = { version = "0.2.2", modules = {}, order = {}, movers = {}, native = {}, editing = false }
 _G.ForeverUI = F
 F.colors = {
     background = { 0.035, 0.030, 0.050, 0.95 }, panel = { 0.065, 0.055, 0.090, 0.96 },
@@ -327,7 +327,7 @@ function F.ApplyCompactLayout()
     end
     F.db.layoutBackup = previous
     F.ResetLayout()
-    F.Message("已应用紧凑布局。输入 /fui layout undo 可找回上一次布局。")
+    F.Message("已应用紧凑布局；动作条保持游戏原生布局。输入 /fui layout undo 可找回上一次布局。")
 end
 function F.UndoCompactLayout()
     if not F.db or not F.Guard() then return end
@@ -442,6 +442,7 @@ SlashCmdList.FOREVERUI = function(message)
     if not F.db then F.Message("配置尚未就绪。"); return end
     local command = (message or ""):match("^%s*(.-)%s*$"):lower()
     if command == "edit" then F.SetEdit(not F.editing)
+    elseif command == "status" then F.modules.actionbars:PrintStatus()
     elseif command == "reset" then F.ResetLayout()
     elseif command == "off" or command == "restore" then F.RestoreAll()
     elseif command == "on" then F.ApplyProfile()

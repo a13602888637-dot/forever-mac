@@ -1,7 +1,7 @@
 -- Minimal Lua 5.1 execution harness. It verifies our logic, not the game client's secure engine.
 unpack = unpack or table.unpack
 local frames = {}
-MOCK = { combat = false, mutations = 0, secretDisplay = 0, secretHealth = false, failSecure = false, failDriver = false, messages = {} }
+MOCK = { combat = false, mutations = 0, protectedMutations = 0, secretDisplay = 0, secretHealth = false, failSecure = false, failDriver = false, messages = {} }
 MOCK.secret = setmetatable({}, {
     __tostring = function() error("secret tostring") end,
     __add = function() error("secret arithmetic") end,
@@ -21,6 +21,7 @@ local methods = {}
 local function mutation(self)
     if self.protected and MOCK.combat then error("protected mutation in combat") end
     MOCK.mutations = MOCK.mutations + 1
+    if self.protected then MOCK.protectedMutations = MOCK.protectedMutations + 1 end
 end
 function methods:SetSize(w,h) mutation(self); self.width,self.height=w,h end
 function methods:GetScale() return self.scale or 1 end
@@ -38,6 +39,7 @@ function methods:GetCenter() return 400,300 end
 function methods:GetParent() return self.parent end
 function methods:SetParent(p) mutation(self); self.parent=p end
 function methods:GetName() return self.name end
+function methods:GetObjectType() return self.kind end
 function methods:SetFrameStrata(s) self.strata=s end
 function methods:GetFrameStrata() return self.strata or 'MEDIUM' end
 function methods:GetFrameLevel() return self.level or 3 end
@@ -56,16 +58,19 @@ function methods:RegisterEvent(e) self.events[e]=true end
 function methods:UnregisterAllEvents() self.events={} end
 function methods:SetAttribute(k,v) mutation(self); self.attrs[k]=v end
 function methods:GetAttribute(k) return self.attrs[k] end
-function methods:Show() self.shown=true end
-function methods:Hide() self.shown=false end
+function methods:Show() mutation(self); self.shown=true end
+function methods:Hide() mutation(self); self.shown=false end
 function methods:IsShown() return self.shown~=false end
-function methods:SetAlpha(a) self.alpha=a end
+function methods:IsVisible() return self:IsShown() and (not self.parent or self.parent:IsVisible()) end
+function methods:SetAlpha(a) mutation(self); self.alpha=a end
 function methods:GetAlpha() return self.alpha or 1 end
+function methods:GetEffectiveAlpha() return self:GetAlpha() * (self.parent and self.parent:GetEffectiveAlpha() or 1) end
+function methods:IsProtected() return self.protected == true end
 function methods:SetColorTexture(...) self.color={...} end
 function methods:SetVertexColor(...) self.color={...} end
 function methods:GetVertexColor() return unpack(self.color or {1,1,1,1}) end
 function methods:SetTexture(texture) assert(not issecretvalue(texture)); self.texture=texture end
-function methods:SetTexCoord(...) self.coords={...} end
+function methods:SetTexCoord(...) mutation(self); self.coords={...} end
 function methods:GetTexCoord() return unpack(self.coords or {0,0,0,1,1,0,1,1}) end
 function methods:SetStatusBarTexture(texture) self.texture=texture end
 function methods:SetStatusBarColor(...) self.color={...} end
@@ -77,10 +82,10 @@ function methods:SetFormattedText(format,...)
     for i=1,select('#',...) do if issecretvalue(select(i,...)) then MOCK.secretDisplay=MOCK.secretDisplay+1; self.text='restricted'; return end end
     self.text=string.format(format,...)
 end
-function methods:SetTextColor(...) self.textColor={...} end
+function methods:SetTextColor(...) mutation(self); self.textColor={...} end
 function methods:GetTextColor() return unpack(self.textColor or {1,1,1,1}) end
 function methods:SetJustifyH(s) end
-function methods:SetFont(path,size,flags) self.font={path,size,flags} end
+function methods:SetFont(path,size,flags) mutation(self); self.font={path,size,flags} end
 function methods:GetFont() return unpack(self.font or {'Fonts\\ARKai_T.ttf',12,''}) end
 function methods:SetShadowColor(...) end
 function methods:SetShadowOffset(...) end
@@ -144,16 +149,52 @@ function ToggleAllBags() MOCK.nativeBagsOpened=true end
 local function native(name,kind)
  local f=make(kind or 'Frame',name,UIParent); f:SetPoint('CENTER',UIParent,'CENTER',0,0); return f
 end
-for _,name in ipairs({'PlayerFrame','TargetFrame','TargetFrameToT','PetFrame','PartyFrame','CompactPartyFrame','CompactRaidFrameContainer','MainActionBar','MultiBarBottomLeft','MultiBarBottomRight','MultiBarLeft','MultiBarRight','PetActionBar','StanceBar','Minimap','MinimapCluster','ObjectiveTrackerFrame','ChatFrame1','ChatFrame2','EssentialCooldownViewer','UtilityCooldownViewer','ExtraActionButton1','ZoneAbilityFrame','MicroMenuContainer','BagsBar'}) do native(name) end
+MOCK.barRoots={'MainActionBar','MultiBarBottomLeft','MultiBarBottomRight','MultiBarLeft','MultiBarRight','MultiBar5','MultiBar6','MultiBar7','PetActionBar','StanceBar','OverrideActionBar','PossessBar','ExtraActionButton1','ZoneAbilityFrame','MicroMenuContainer','BagsBar'}
+for _,name in ipairs({'PlayerFrame','TargetFrame','TargetFrameToT','PetFrame','PartyFrame','CompactPartyFrame','CompactRaidFrameContainer','Minimap','MinimapCluster','ObjectiveTrackerFrame','ChatFrame1','ChatFrame2','EssentialCooldownViewer','UtilityCooldownViewer'}) do native(name) end
+for _,name in ipairs(MOCK.barRoots) do native(name).protected=true end
+MOCK.barButtons={}
 PlayerCastingBarFrame=native('PlayerCastingBarFrame'); PlayerCastingBarFrame:SetParent(PlayerFrame)
 for i=1,12 do
  local b=native('ActionButton'..i,'Button'); b.icon=b:CreateTexture(nil,'ARTWORK'); b.normal=b:CreateTexture(nil,'ARTWORK'); b.HotKey=b:CreateFontString(nil,'OVERLAY')
+ local container=native('MainActionBarButtonContainer'..i); container:SetParent(MainActionBar)
+ b:SetParent(container); b.container=container; container.protected=true
  b.protected=true
- for _,prefix in ipairs({'MultiBarBottomLeftButton','MultiBarBottomRightButton','MultiBarRightButton','MultiBarLeftButton'}) do
+ MOCK.barButtons[#MOCK.barButtons+1]=b
+ for _,prefix in ipairs({'MultiBarBottomLeftButton','MultiBarBottomRightButton','MultiBarRightButton','MultiBarLeftButton','MultiBar5Button','MultiBar6Button','MultiBar7Button','PetActionButton','StanceButton'}) do
   local extra=native(prefix..i,'Button'); extra.protected=true
+  local bar=_G[prefix:gsub('Button$','')] or (prefix=='PetActionButton' and PetActionBar or StanceBar)
+  local holder=native(bar:GetName()..'ButtonContainer'..i); holder:SetParent(bar); holder.protected=true
+  extra:SetParent(holder); extra.container=holder
   extra.icon=extra:CreateTexture(nil,'ARTWORK'); extra.normal=extra:CreateTexture(nil,'ARTWORK')
+  MOCK.barButtons[#MOCK.barButtons+1]=extra
  end
+end
+function MOCK.LockBarWrites()
+ -- A write attempt fails even if the addon catches it or restores the same value.
+ -- Native engine changes in SetCombat remain direct simulated client writes.
+ MOCK.barWriteAttempts=0
+ local function lock(frame)
+  for _,method in ipairs({'SetParent','SetPoint','ClearAllPoints','SetAllPoints','SetSize','SetWidth','SetHeight','SetScale','SetAlpha','Show','Hide','SetShown','SetAttribute','SetUserPlaced','SetMovable','SetFrameLevel','SetFrameStrata','EnableMouse','SetScript','RegisterForClicks','RegisterForDrag','CreateTexture','CreateFontString'}) do
+   frame[method]=function() MOCK.barWriteAttempts=MOCK.barWriteAttempts+1; error('native action frame write: '..method) end
+  end
+ end
+ for _,name in ipairs(MOCK.barRoots) do lock(_G[name]) end
+ for _,button in ipairs(MOCK.barButtons) do lock(button); lock(button.container) end
 end
 function MOCK.Fire(event,...)
  for _,frame in ipairs(frames) do if frame.events[event] and frame.scripts.OnEvent then frame.scripts.OnEvent(frame,event,...) end end
+end
+function MOCK.SetCombat(combat)
+ -- The client, not addon Lua, evaluates native visibility in its secure path.
+ MOCK.combat=combat
+ for _,name in ipairs({'MainActionBar','MultiBarBottomLeft','MultiBarBottomRight','MultiBarRight','MultiBarLeft'}) do
+  local frame=_G[name]
+  local mode=frame.visibility or 'Always'
+  if frame.nativeExternallyHidden then frame.shown=false
+  elseif mode=='Hidden' then frame.shown=false
+  elseif mode=='InCombat' then frame.shown=combat
+  elseif mode=='OutOfCombat' then frame.shown=not combat
+  else frame.shown=true end
+ end
+ MOCK.Fire(combat and 'PLAYER_REGEN_DISABLED' or 'PLAYER_REGEN_ENABLED')
 end

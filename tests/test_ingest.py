@@ -6,7 +6,7 @@ from pydantic import ValidationError
 
 from backend.models import Snapshot
 from backend.paths import discover, import_source
-from backend.savedvariables import ImportError, MAX_FILE_BYTES, parse_savedvariables
+from backend.savedvariables import ImportError, MAX_FILE_BYTES, parse_savedvariables, read_snapshot
 from conftest import savedvariables
 
 
@@ -93,3 +93,86 @@ def test_duplicate_json_keys_rejected(live_raw):
     text = 'ForeverAICharDB={schema_version=1,snapshot_json=' + json.dumps(inner, ensure_ascii=False) + '}'
     with pytest.raises(ImportError, match="重复"):
         parse_savedvariables(text)
+
+
+def forever_save(tmp_path, live_raw, folder_name="测试名-甲", realm="97"):
+    live_raw["character"].update(name="测试名", realm="CN Test Realm PvE")
+    live_raw["client"].update(version="1.60.1", interface=16001)
+    folder = tmp_path / "_forever_/WTF/Account/local-account" / realm / folder_name / "SavedVariables"
+    folder.mkdir(parents=True)
+    path = folder / "ForeverAI.lua"
+    path.write_text(savedvariables(live_raw))
+    return path
+
+
+def test_forever_numeric_realm_and_surname_layout(tmp_path, live_raw):
+    path = forever_save(tmp_path, live_raw)
+    snapshot = read_snapshot(path, "测试名-甲", "97")
+    assert snapshot.character.name == "测试名"
+    assert snapshot.character.realm == "CN Test Realm PvE"
+    assert snapshot.character.display_name == "测试名 甲"
+    assert snapshot.character.identity == "97:测试名-甲"
+    # Derived location metadata survives database serialization without becoming
+    # a required game API field in older snapshots.
+    assert Snapshot.model_validate_json(snapshot.model_dump_json()).character.identity == snapshot.character.identity
+    from backend.ai import evidence_context
+    context = json.dumps(evidence_context(snapshot, "id"), ensure_ascii=False)
+    assert "测试名" not in context and "CN Test Realm PvE" not in context
+    assert "storage_name" not in context and "storage_realm_id" not in context
+
+
+@pytest.mark.parametrize("other", ["97/测试名-乙", "98/测试名-乙", "98/测试名-甲"])
+def test_forever_short_first_name_is_rejected_when_ambiguous(tmp_path, live_raw, other):
+    path = forever_save(tmp_path, live_raw)
+    (path.parents[3] / other / "SavedVariables").mkdir(parents=True)
+    with pytest.raises(ImportError, match="同名不同姓"):
+        read_snapshot(path, "测试名-甲", "97")
+
+
+def test_forever_full_name_keeps_surnames_separate(tmp_path, live_raw):
+    path = forever_save(tmp_path, live_raw)
+    (path.parents[2] / "测试名-乙/SavedVariables").mkdir(parents=True)
+    live_raw["character"]["name"] = "测试名 甲"
+    path.write_text(savedvariables(live_raw))
+    assert read_snapshot(path, "测试名-甲", "97").character.identity == "97:测试名-甲"
+    live_raw["character"]["name"] = "测试名 乙"
+    path.write_text(savedvariables(live_raw))
+    with pytest.raises(ImportError, match="身份"):
+        read_snapshot(path, "测试名-甲", "97")
+
+
+def test_numeric_layout_does_not_relax_other_clients_or_numeric_realm_mismatches(tmp_path, live_raw):
+    path = forever_save(tmp_path, live_raw)
+    live_raw["client"].update(version="12.0.0", interface=120000)
+    path.write_text(savedvariables(live_raw))
+    with pytest.raises(ImportError, match="身份"):
+        read_snapshot(path, "测试名-甲", "97")
+    live_raw["client"].update(version="1.60.1", interface=16001)
+    live_raw["character"]["realm"] = "98"
+    path.write_text(savedvariables(live_raw))
+    with pytest.raises(ImportError, match="服务器编号"):
+        read_snapshot(path, "测试名-甲", "97")
+
+
+@pytest.mark.parametrize("name,realm", [("测试名 甲", "CN Test Realm PvE"), ("测试名-甲", "97")])
+def test_forever_full_name_and_realm_formats_keep_storage_identity(tmp_path, live_raw, name, realm):
+    path = forever_save(tmp_path, live_raw)
+    original = read_snapshot(path, "测试名-甲", "97")
+    live_raw["character"].update(name=name, realm=realm, storage_name="伪造-姓名", storage_realm_id=999)
+    path.write_text(savedvariables(live_raw))
+    updated = read_snapshot(path, "测试名-甲", "97")
+    assert updated.character.identity == original.character.identity
+    assert updated.character.display_name == original.character.display_name
+    assert updated.character.storage_name == "测试名-甲"
+    assert updated.character.storage_realm_id == 97
+
+
+def test_traditional_identity_ignores_exported_storage_metadata(tmp_path, live_raw):
+    character = live_raw["character"]
+    character.update(storage_name="伪造-姓名", storage_realm_id=999)
+    path = tmp_path / "ForeverAI.lua"
+    path.write_text(savedvariables(live_raw))
+    snapshot = read_snapshot(path, character["name"], character["realm"])
+    assert snapshot.character.identity == f'{character["realm"]}:{character["name"]}'
+    assert snapshot.character.storage_name is None
+    assert snapshot.character.storage_realm_id is None

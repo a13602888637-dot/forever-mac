@@ -13,6 +13,10 @@ SOURCES = {
     "littlewigs": {"name": "LittleWigs", "core": "LittleWigs", "curse_id": "4383", "repo": "BigWigsMods/LittleWigs", "category": "副本"},
     "bigwigs": {"name": "BigWigs", "core": "BigWigs", "curse_id": "2382", "repo": "BigWigsMods/BigWigs", "category": "副本"},
     "details": {"name": "Details!", "core": "Details", "curse_id": "61284", "category": "战斗", "url": "https://www.curseforge.com/wow/addons/details"},
+    "atlas": {"name": "Atlas", "core": "Atlas", "curse_id": "301", "repo": "arithmandar/Atlas", "category": "地图"},
+    "atlas-classic": {"name": "Atlas Kalimdor & Eastern Kingdoms", "core": "Atlas_ClassicWoW", "curse_id": "33667", "repo": "arithmandar/Atlas-Kalimdor-and-Eastern-Kingdoms", "category": "地图"},
+    "dbm-dungeons": {"name": "DBM · 地下城首领模块", "core": "DBM-Party-Forever", "curse_id": "314994", "repo": "DeadlyBossMods/DBM-Dungeons", "category": "副本"},
+    "questie": {"name": "Questie", "core": "Questie", "curse_id": "334372", "category": "任务", "url": "https://www.curseforge.com/wow/addons/questie"},
 }
 
 
@@ -20,10 +24,11 @@ def plain(value):
     return re.sub(r"\|[cC][0-9a-fA-F]{8}|\|[rR]|\|[Tt].*?\|[tT]", "", value).strip()
 
 
-def read_toc(folder: Path) -> dict:
-    choices = [folder / f"{folder.name}_Camelot.toc", folder / f"{folder.name}.toc"]
+def read_toc(folder: Path, directory_name: str | None = None) -> dict:
+    name = identifier(directory_name) if directory_name is not None else folder.name
+    choices = [folder / f"{name}_Camelot.toc", folder / f"{name}.toc"]
     toc = next((p for p in choices if p.is_file() and not p.is_symlink()), None)
-    data = {"directory": folder.name, "title": folder.name, "version": None, "interface": [],
+    data = {"directory": name, "title": name, "version": None, "interface": [],
             "dependencies": [], "optional_dependencies": [], "saved_variables": [], "files": [], "toc": None,
             "metadata": {}, "compatibility": "unknown", "issues": []}
     if folder.is_symlink():
@@ -50,7 +55,7 @@ def read_toc(folder: Path) -> dict:
     version = meta.get("version")
     if version and ("@" in version or "$" in version):
         version = None
-    data.update(title=plain(meta.get("title-zhcn", meta.get("title", folder.name))), version=version,
+    data.update(title=plain(meta.get("title-zhcn", meta.get("title", name))), version=version,
                 interface=interface, dependencies=parts("dependencies", "requireddeps"),
                 optional_dependencies=parts("optionaldeps", "optionaldependencies"),
                 saved_variables=parts("savedvariables", "savedvariablespercharacter"),
@@ -84,6 +89,13 @@ def scan_addons(root: Path) -> list[dict]:
 
 def package_id(module: dict, all_modules: dict) -> str:
     name, meta = module["directory"], module["metadata"]
+    # An explicit publisher project id outranks a shared DBM namespace/group.
+    # The dungeon pack must never be silently assigned to the core updater.
+    for key, source in SOURCES.items():
+        core = all_modules.get(source["core"])
+        if (core and core["metadata"].get("x-curse-project-id") == source["curse_id"]
+                and meta.get("x-curse-project-id") == source["curse_id"]):
+            return key
     for key, source in SOURCES.items():
         core = all_modules.get(source["core"])
         # A known core identity is required. Module names alone never bind sources.

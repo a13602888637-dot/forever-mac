@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% from 'macros.html' import source with context %}
+{% block title %}{{ detail.record.name }}{% endblock %}
+{% block content %}
+<a class="back-link" href="/references?kind={{ kind }}">← {{ detail.kind_label }}图鉴</a>
+<section class="addon-detail-heading">
+  {% if detail.art_url %}<img class="world-detail-art" src="{{ detail.art_url }}" alt="{{ detail.record.name }} · {{ '加载画面' if kind == 'instances' else '来源图片' }}">{% endif %}
+  <div><h1>{{ detail.record.name }}</h1><p>{{ detail.category_label }} · {{ detail.record.id }}</p></div>
+  <a class="button button-secondary" href="{{ detail.source_page }}" target="_blank" rel="noreferrer">查看来源 ↗</a>
+</section>
+{% if detail.get('loot_groups') %}<section class="panel boss-loot-section"><div class="heading-inline"><h2>首领掉落</h2><button class="button button-secondary" data-api="/api/references/sync" data-json="{}" data-reload>同步资料与掉落</button></div>
+  <p class="small muted">Spyglass 为《无限》整理的参考掉落；QuestieDB 为经典旧世参考。物品属性使用当前本地图鉴，掉落关系和掉率仍待游戏内核实。</p>
+  {% for loot in detail.loot_groups %}<section class="boss-loot-group"><h3><a href="{{ loot.url }}">{{ loot.name }}</a> <span class="tag">{{ loot.source_label }}</span> <small class="muted">{{ loot['items']|length }} 件</small></h3>
+    <div class="reference-grid loot-grid">{% for item in loot['items'] %}<a class="reference-card" href="{{ item.url or item.source_url }}" {% if not item.url %}target="_blank" rel="noreferrer"{% endif %}><span class="item-image quality-{{ item.q }}">{% if item.icon_url %}<img src="{{ item.icon_url }}" alt="" loading="lazy">{% else %}<span class="item-placeholder">物品</span>{% endif %}</span><div><h3>{{ item.name }}</h3><p>{{ item.slot or '物品' }} · {{ item.id }}{% if item.item_level is not none %} · 装等 {{ item.item_level }}{% endif %}{% if item.required_level %} · 需求 {{ item.required_level }} 级{% endif %}</p>{% if item.shared %}<small class="muted">其他怪物也可能掉落</small>{% endif %}{% if not item.known %}<small class="muted">本地未收录属性 · 查看来源 ↗</small>{% endif %}</div></a>{% else %}<p class="muted">{{ '来源暂未收录掉落，不代表没有掉落。' if loot.cached else '掉落尚未同步，点击上方按钮加载。' }}</p>{% endfor %}</div>
+    <details class="loot-source"><summary>掉落来源与范围</summary><p class="small muted">{{ loot.note }}</p><p class="small"><a href="{{ loot.source_url }}" target="_blank" rel="noreferrer">无限图鉴 · 首领详情接口来源 ↗</a>{% if loot.fetched_at %} · 同步于 {{ loot.fetched_at|datetime }}{% endif %}</p></details>
+  </section>{% endfor %}
+</section>{% endif %}
+<div class="detail-layout">
+  <section class="panel"><h2>{{ detail.kind_label }}资料</h2>
+    <dl class="detail-list">{% for field in detail.fields %}<div><dt>{{ field.label }}</dt><dd>{{ field.value }}</dd></div>{% endfor %}</dl>
+    {% for paragraph in detail.paragraphs %}<p class="preserve-lines">{{ paragraph }}</p>{% endfor %}
+    {{ source(detail.source) }}
+  </section>
+  <aside><section class="panel"><h2>收录范围</h2>{% for note in detail.notes %}<p class="small muted">{{ note }}</p>{% endfor %}
+    <p class="small muted">{{ '资料版本与角色客户端一致' if detail.source.version_matches else '尚未确认与角色客户端版本一致' }}；未在本机实测。</p>
+    <a href="/discover?category={{ '任务' if kind == 'quests' else '地图' if kind == 'maps' else '副本' }}">查看相关插件 →</a>
+  </section>
+  {% if detail.supplements %}<section class="panel"><h2>第三方补充 · 待核实</h2><p class="small muted">QuestieDB 的其他版本参考资料，单独保留，不作为《无限》的已确认事实。</p><dl class="detail-list">{% for f in detail.supplements %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}</dl><a href="https://github.com/Questie/QuestieDB" target="_blank" rel="noreferrer">QuestieDB · Questie 团队 ↗</a></section>{% endif %}
+  </aside>
+</div>
+{% for map in detail.maps %}<section class="panel reference-map-panel"><div class="heading-inline"><div><h2>{{ map.name }}</h2><p class="small muted">{{ map.caption }}</p></div><a href="{{ map.url }}">地图详情 →</a></div>
+  {% if map.image_url %}<div class="reference-map"><img src="{{ map.image_url }}" alt="{{ map.name }}区域地图" loading="lazy">{% for pin in map.markers %}<a class="map-pin {{ 'approximate' if pin.approx else '' }}" data-map-x="{{ pin.x_percent }}" data-map-y="{{ pin.y_percent }}" href="{{ pin.url or '#map-' ~ map.id ~ '-pin-' ~ loop.index }}" aria-label="{{ pin.label }}{{ '（近似或补充）' if pin.approx else '' }}" title="{{ pin.label }} · {{ pin.source or '来源未注明' }}">{{ loop.index }}</a>{% endfor %}</div>{% else %}<p class="muted">地图图片暂未收录。</p>{% endif %}
+  <ol class="map-legend">{% for pin in map.markers %}<li id="map-{{ map.id }}-pin-{{ loop.index }}">{% if pin.url %}<a href="{{ pin.url }}">{{ pin.label }}</a>{% else %}{{ pin.label }}{% endif %}<span class="muted small"> · {{ pin.x_percent }}, {{ pin.y_percent }} · {{ '近似 / 补充 · ' if pin.approx else '' }}{{ pin.source or '来源未注明' }}</span></li>{% endfor %}</ol>
+</section>{% endfor %}
+<div class="platform-columns">{% for group in detail.groups %}<section class="panel"><h2>{{ group.title }}</h2><div class="reference-relations">{% for item in group['items'] %}{% if item.url %}<a href="{{ item.url }}">{% else %}<div class="unavailable-relation">{% endif %}<span>{% if item.order %}{{ item.order }}. {% endif %}{{ item.name }}</span>{% if item.quantity %}<span>× {{ item.quantity }}</span>{% endif %}</{{ 'a' if item.url else 'div' }}>{% endfor %}</div></section>{% endfor %}</div>
+{% endblock %}

@@ -106,6 +106,35 @@ def test_source_binding_never_guesses_by_name(platform):
     assert group["source"] == "unbound"
 
 
+def test_xml_comments_do_not_require_unshipped_optional_libraries(tmp_path):
+    from backend.addon_archive import check_references
+    folder = tmp_path / "AtlasLike"
+    folder.mkdir()
+    (folder / "AtlasLike.toc").write_text("## Interface: 16001\nLibs.xml\n")
+    (folder / "Libs.xml").write_text('<Ui><!-- <Include file="optional.xml"/> -->'
+                                    '<Script file="active.lua"/></Ui>')
+    assert check_references(folder, tmp_path) == ["TOC/XML 引用缺失：active.lua"]
+    (folder / "active.lua").write_text("local library = true")
+    assert check_references(folder, tmp_path) == []
+
+
+@pytest.mark.parametrize("status,expected", [
+    ("release_differs", "2.0"),
+    ("unknown", "暂时无法获取作者发布"),
+])
+def test_home_renders_cached_update_details(platform, status, expected):
+    addon(platform.game() / "Interface/AddOns", "EllesmereUI", version="1.0", extra="## X-Curse-Project-ID: 1477613")
+    state = platform.tx.state()
+    state["updates"] = {"ellesmere": {"installed_version": "1.0", "status": status,
+                                    "release": {"version": "2.0"}, "note": "暂时无法获取作者发布"}}
+    platform.tx.save_state(state)
+    platform.settings.ai_provider = "rules"
+    with TestClient(create_app(platform.settings), base_url="http://127.0.0.1", raise_server_exceptions=False) as client:
+        response = client.get("/")
+        assert response.status_code == 200
+        assert expected in response.text
+
+
 def test_multidir_apply_retire_and_rollback(platform, tmp_path):
     a = stage(platform, bundle(tmp_path, ["Main", "Child"]), "custom")
     assert a["can_apply"]

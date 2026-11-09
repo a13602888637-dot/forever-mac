@@ -3,29 +3,27 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from collections.abc import Callable
 from urllib.parse import urlsplit
 
 import httpx
 
 from .addon_metadata import INTERFACE, SOURCES
+from .addon_catalog import PROJECTS
 from .platform_io import MAX_UPLOAD
 
 NETWORK_HOSTS = {"api.github.com", "github.com", "objects.githubusercontent.com", "release-assets.githubusercontent.com"}
 CURSEFORGE_FOREVER = "https://www.curseforge.com/wow/search?class=addons&search=Forever"
 CURSEFORGE_APPLY = "https://support.curseforge.com/support/solutions/articles/9000208346-about-the-curseforge-api-and-how-to-apply-for-a-key"
-CATALOG = [
-    {"id": key, "name": s["name"], "category": s["category"], "url": "https://github.com/" + s["repo"] + "/releases",
-     "note": "检查作者 Forever 发布；安装前展示依赖和目录变更"} for key, s in SOURCES.items() if s.get("repo")
-] + [
-    {"id": "foreverui", "name": "ForeverUI · 亡灵奥术", "category": "界面", "url": None, "note": "本项目内置；与 EllesmereUI 的动作条、头像、背包、聊天、地图、任务追踪重叠"},
-    {"id": "suite", "name": "WoW Forever Suite", "category": "界面", "url": "https://www.curseforge.com/wow/addons/wow-forever-suite", "note": "可选；背包、地图、聊天及升级功能与当前界面重叠，需官网检查 Forever 文件后导入 ZIP"},
-    {"id": "bags", "name": "背包插件", "category": "背包", "url": "https://www.curseforge.com/wow/addons/search?search=bags", "note": "在官网选择 Forever；注意与 EllesmereUIBags / ForeverUI 重叠"},
-    {"id": "combat", "name": "Details!", "category": "战斗", "url": "https://www.curseforge.com/wow/addons/details", "note": "需官网检查 Forever 文件；与 EllesmereUIDamageMeters 重叠"},
-    {"id": "maps", "name": "地图与任务", "category": "地图", "url": "https://www.curseforge.com/wow/addons/search?search=forever%20map", "note": "在官网选择 Forever；与现有小地图和任务追踪功能核对"},
-]
+# Kept for older inventory/MCP clients; every entry is a concrete project.
+
+CATALOG = [{"id": key, "name": value["name"], "category": value["category"],
+            "url": value.get("source_url"), "note": value["description"]} for key, value in PROJECTS.items()]
 
 
-def fetch(url: str, limit: int, destination: Path | None = None) -> bytes:
+
+def fetch(url: str, limit: int, destination: Path | None = None,
+          progress: Callable[[int], None] | None = None) -> bytes:
     """Bound both redirects and decompressed response bytes; never forward credentials."""
     total, chunks = 0, []
     stream = destination.open("wb") if destination else None
@@ -40,7 +38,9 @@ def fetch(url: str, limit: int, destination: Path | None = None) -> bytes:
                         url = str(response.url.join(response.headers["location"]))
                         continue
                     response.raise_for_status()
-                    for chunk in response.iter_bytes():
+                    if progress:
+                        progress(0)
+                    for chunk in response.iter_bytes(chunk_size=128 * 1024):
                         total += len(chunk)
                         if total > limit:
                             raise ValueError("下载体积超过限制")
@@ -48,6 +48,8 @@ def fetch(url: str, limit: int, destination: Path | None = None) -> bytes:
                             stream.write(chunk)
                         else:
                             chunks.append(chunk)
+                        if progress:
+                            progress(total)
                     return b"".join(chunks)
             raise ValueError("下载重定向过多")
     except (httpx.HTTPError, KeyError) as exc:
@@ -88,7 +90,8 @@ def author_release(key: str) -> dict:
                 "filename": release["filename"], "url": asset["browser_download_url"],
                 "size": asset["size"], "source_url": f"https://github.com/{repo}/releases/tag/{data['tag_name']}",
                 "sha256": asset.get("digest", "").removeprefix("sha256:") if (asset.get("digest") or "").startswith("sha256:") else None,
-                "declaration": "author_release", "manifest": release}
+                "declaration": "author_release", "manifest": release,
+                "published_at": data.get("published_at"), "changelog": data.get("body")}
     except (KeyError, TypeError, json.JSONDecodeError) as exc:
         raise ValueError("作者发布清单格式未知，不能判断最新版") from exc
 

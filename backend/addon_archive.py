@@ -111,6 +111,7 @@ def check_references(folder: Path, package_root: Path) -> list[str]:
                 issues.append("XML 不允许外部实体或 DTD")
                 return
             # No XML evaluation or entity expansion, only declared local files.
+            content = re.sub(r"<!--.*?-->", "", content, flags=re.S)
             for child in re.findall(r'<(?:Script|Include)\b[^>]*\bfile\s*=\s*[\'"]([^\'"]+)', content, re.I):
                 check(target.parent, child)
     for file in data["files"]:

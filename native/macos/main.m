@@ -17,8 +17,21 @@
 
 @implementation ForeverApp
 
+- (NSString *)argumentAfter:(NSString *)key {
+    NSArray *args = NSProcessInfo.processInfo.arguments;
+    NSUInteger index = [args indexOfObject:key];
+    return index != NSNotFound && index + 1 < args.count ? args[index + 1] : nil;
+}
+- (NSURL *)verificationDirectory {
+    NSString *size = [self argumentAfter:@"--verify-size"] ?: @"default";
+    NSCharacterSet *invalid = [[NSCharacterSet characterSetWithCharactersInString:@"0123456789x"] invertedSet];
+    if ([size rangeOfCharacterFromSet:invalid].location != NSNotFound) size = @"default";
+    return [self.projectURL URLByAppendingPathComponent:[@"outputs/v04/native-" stringByAppendingString:size] isDirectory:YES];
+}
+
+
 - (void)writeState:(NSString *)phase message:(NSString *)message {
-    NSURL *directory = [self.projectURL URLByAppendingPathComponent:@"data" isDirectory:YES];
+    NSURL *directory = [NSProcessInfo.processInfo.arguments containsObject:@"--verify-native"] ? [self verificationDirectory] : [self.projectURL URLByAppendingPathComponent:@"data" isDirectory:YES];
     [[NSFileManager defaultManager] createDirectoryAtURL:directory withIntermediateDirectories:YES attributes:nil error:nil];
     NSDictionary *state = @{
         @"phase":phase, @"message":message ?: @"", @"pid":@(getpid()),
@@ -34,10 +47,10 @@
     NSMenu *menu = [[NSMenu alloc] init];
     NSMenuItem *appItem = [[NSMenuItem alloc] init];
     [menu addItem:appItem];
-    NSMenu *appMenu = [[NSMenu alloc] initWithTitle:@"Forever AI"];
-    [appMenu addItemWithTitle:@"关于 Forever AI" action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
+    NSMenu *appMenu = [[NSMenu alloc] initWithTitle:@"Forever"];
+    [appMenu addItemWithTitle:@"关于 Forever" action:@selector(orderFrontStandardAboutPanel:) keyEquivalent:@""];
     [appMenu addItem:NSMenuItem.separatorItem];
-    [appMenu addItemWithTitle:@"退出 Forever AI" action:@selector(terminate:) keyEquivalent:@"q"];
+    [appMenu addItemWithTitle:@"退出 Forever" action:@selector(terminate:) keyEquivalent:@"q"];
     appItem.submenu = appMenu;
     NSMenuItem *editItem = [[NSMenuItem alloc] initWithTitle:@"编辑" action:nil keyEquivalent:@""];
     NSMenu *edit = [[NSMenu alloc] initWithTitle:@"编辑"];
@@ -79,12 +92,16 @@
     [self setupMenu];
     NSRect screen = NSScreen.mainScreen.visibleFrame;
     CGFloat width = MIN(1320,NSWidth(screen)-48), height = MIN(900,NSHeight(screen)-60);
+    if ([NSProcessInfo.processInfo.arguments containsObject:@"--verify-native"]) {
+        NSArray *size = [[self argumentAfter:@"--verify-size"] componentsSeparatedByString:@"x"];
+        if (size.count == 2) { width = MAX(900,MIN(2000,[size[0] doubleValue])); height = MAX(620,MIN(1500,[size[1] doubleValue])); }
+    }
     self.window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0,0,width,height)
         styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable
         backing:NSBackingStoreBuffered defer:NO];
-    self.window.title = @"Forever AI Companion";
+    self.window.title = @"Forever";
     self.window.titlebarAppearsTransparent = YES;
-    self.window.backgroundColor = [NSColor colorWithSRGBRed:.055 green:.043 blue:.075 alpha:1];
+    self.window.backgroundColor = [NSColor colorWithSRGBRed:.098 green:.102 blue:.114 alpha:1];
     self.window.appearance = [NSAppearance appearanceNamed:NSAppearanceNameDarkAqua];
     self.window.minSize = NSMakeSize(MIN(900,width),MIN(620,height));
     self.window.releasedWhenClosed = NO;
@@ -103,9 +120,9 @@
     NSImageView *icon = [[NSImageView alloc] init];
     icon.image = self.appIcon; icon.translatesAutoresizingMaskIntoConstraints = NO;
     [self.loadingView addSubview:icon];
-    NSTextField *title = [self label:@"FOREVER" size:30 color:[NSColor colorWithSRGBRed:.91 green:.87 blue:.80 alpha:1]];
+    NSTextField *title = [self label:@"Forever" size:30 color:[NSColor colorWithSRGBRed:.91 green:.87 blue:.80 alpha:1]];
     [self.loadingView addSubview:title];
-    self.statusLabel = [self label:@"正在打开你的奥术手记…" size:14 color:[NSColor colorWithSRGBRed:.67 green:.52 blue:.92 alpha:1]];
+    self.statusLabel = [self label:@"正在打开插件与角色资料…" size:14 color:[NSColor colorWithSRGBRed:.96 green:.54 blue:.25 alpha:1]];
     self.statusLabel.maximumNumberOfLines = 4; self.statusLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self.loadingView addSubview:self.statusLabel];
     self.progress = [[NSProgressIndicator alloc] init];
@@ -126,7 +143,13 @@
     ]];
     [self.window makeKeyAndOrderFront:nil];
     [NSApp activateIgnoringOtherApps:YES];
-    [self startService];
+    NSString *verificationURL = [self argumentAfter:@"--verify-url"];
+    if ([NSProcessInfo.processInfo.arguments containsObject:@"--verify-native"] && verificationURL) {
+        NSURL *url = [NSURL URLWithString:verificationURL];
+        if (![self isLocalURL:url]) { [self showFailure:@"验收地址必须为本机服务"]; return; }
+        self.serviceURL = url;
+        [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+    } else [self startService];
 }
 
 - (BOOL)isLocalURL:(NSURL *)url {
@@ -139,7 +162,7 @@
     self.statusLabel.stringValue = message;
     [self writeState:@"failed" message:message];
     NSAlert *alert = [[NSAlert alloc] init];
-    alert.messageText = @"Forever AI 启动未完成"; alert.informativeText = message;
+    alert.messageText = @"Forever 启动未完成"; alert.informativeText = message;
     [alert addButtonWithTitle:@"重试"]; [alert addButtonWithTitle:@"关闭"];
     [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse response) {
         if (response == NSAlertFirstButtonReturn) [self startService];
@@ -192,18 +215,20 @@
     [self.window makeFirstResponder:webView];
     [self writeState:@"ready" message:webView.title ?: @""];
     if ([NSProcessInfo.processInfo.arguments containsObject:@"--verify-native"]) {
-        NSURL *directory = [self.projectURL URLByAppendingPathComponent:@"outputs/app-repair/native-verification" isDirectory:YES];
+        NSURL *directory = [self verificationDirectory];
         [[NSFileManager defaultManager] createDirectoryAtURL:directory withIntermediateDirectories:YES attributes:nil error:nil];
-        [webView takeSnapshotWithConfiguration:nil completionHandler:^(NSImage *image, NSError *error) {
-            if (!image || error) return;
-            NSBitmapImageRep *bitmap = [NSBitmapImageRep imageRepWithData:image.TIFFRepresentation];
-            [[bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}]
-                writeToURL:[directory URLByAppendingPathComponent:@"native-content.png"] atomically:YES];
+        NSString *script = @"await Promise.race([Promise.all(Array.from(document.images).filter(i=>i.loading!=='lazy').map(i=>i.complete?Promise.resolve():new Promise(r=>{i.onload=r;i.onerror=r}))),new Promise(r=>setTimeout(r,15000))]); await new Promise(r=>setTimeout(r,500)); return {title:document.title,width:innerWidth,height:innerHeight,contentWidth:document.documentElement.scrollWidth,rows:Array.from(document.querySelectorAll('[data-addon-id]')).filter(r=>r.getBoundingClientRect().bottom<=innerHeight).length,images:Array.from(document.images).map(i=>({src:i.getAttribute('src'),loaded:i.complete&&i.naturalWidth>0})),heading:document.querySelector('h1')?.innerText};";
+        [webView callAsyncJavaScript:script arguments:@{} inFrame:nil inContentWorld:WKContentWorld.pageWorld completionHandler:^(id result, NSError *error) {
+            NSDictionary *report = error ? @{@"error":error.localizedDescription} : result;
+            NSData *json = [NSJSONSerialization dataWithJSONObject:report ?: @{} options:NSJSONWritingPrettyPrinted error:nil];
+            [json writeToURL:[directory URLByAppendingPathComponent:@"layout.json"] atomically:YES];
+            [webView takeSnapshotWithConfiguration:nil completionHandler:^(NSImage *image, NSError *snapshotError) {
+                if (!image || snapshotError) return;
+                NSBitmapImageRep *bitmap = [NSBitmapImageRep imageRepWithData:image.TIFFRepresentation];
+                [[bitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}]
+                    writeToURL:[directory URLByAppendingPathComponent:@"native-content.png"] atomically:YES];
+            }];
         }];
-        NSImage *finderIcon = [NSWorkspace.sharedWorkspace iconForFile:NSBundle.mainBundle.bundlePath];
-        NSBitmapImageRep *iconBitmap = [NSBitmapImageRep imageRepWithData:finderIcon.TIFFRepresentation];
-        [[iconBitmap representationUsingType:NSBitmapImageFileTypePNG properties:@{}]
-            writeToURL:[directory URLByAppendingPathComponent:@"finder-icon.png"] atomically:YES];
     }
 }
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
